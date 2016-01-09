@@ -1,7 +1,7 @@
 from tornado.ncss import Server
 
 def index(response):
-    response.write('Hello, World!')
+    response.write('Hello Team 4: Placebook!')
 
 if __name__ == '__main__':
     server = Server()
