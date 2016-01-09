@@ -1,0 +1,2 @@
+class TemplateSyntaxException(Exception):
+    pass
