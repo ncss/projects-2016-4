@@ -1,8 +1,8 @@
 from template import expr_node
-from template.node import Node
+from template.block_node import BlockNode
 
 
-class ForNode(Node):
+class ForNode(BlockNode):
     def __init__(self, var, constraint):
         self.constraint = constraint
         self.var = var

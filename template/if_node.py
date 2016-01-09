@@ -1,17 +1,14 @@
-from template.node import Node
+from template.block_node import BlockNode
 
 
-class IfNode(Node):
+class IfNode(BlockNode):
     def __init__(self, condition):
         self.condition = condition
         self.children = []
 
     def eval(self, context):
         if eval(self.condition, {}, context):
-            results = []
-            for child in self.children:
-                results.append(child.eval(context))
-            return ''.join(results)
+            return super(self).eval(context)
         else:
             return ''
 
