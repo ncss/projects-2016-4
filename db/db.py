@@ -52,17 +52,21 @@ class Location:
     @staticmethod
     def create(name, description, picture, uploader, address, longitude, latitude):
         cur = conn.execute('''
-            INSERT INTO location(name, description, picture, uploader, address, longitude, latitude)
+            INSERT INTO locations(name, description, picture, uploader, address, longitude, latitude)
             VALUES(?, ?, ?, ?, ?, ?, ?);
-        ''' (name, description, picture, uploader, address, longitude, latitude) )
+        ''', (name, description, picture, uploader, address, longitude, latitude))
 
     def change_location(self, address, longitude, latitude):
         cur = conn.execute('''
             UPDATE location
-            SET address = ?
-            SET longitude = ?
-            SET latitude = ?
+            SET address = ?, longitude = ?, latitude = ?
             WHERE id = ?;''', (address, longitude, latitude, self.id))
 
-
-
+    @staticmethod
+    def find(id):
+        cur =  conn.execute('''
+            SELECT * FROM locations
+             WHERE id = ?
+             ''', (id,))
+        fetch = cur.fetchone()
+        return fetch
