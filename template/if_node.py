@@ -33,7 +33,7 @@ class IfNode(BlockNode):
     def __repr__(self):
         words = []
         first = True
-        for children,condition in zip(self.children,self.conditions):
+        for children, condition in zip(self.children, self.conditions):
             if first:
                 first = False
                 words.append(self.pprint())
@@ -45,7 +45,6 @@ class IfNode(BlockNode):
                 for part in parts:
                     words.append('  '+part)
         return '\n'.join(words)
-
 
 
 if __name__ == '__main__':

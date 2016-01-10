@@ -1,6 +1,5 @@
-import html
-
 from template.node import Node
+
 
 class ExecNode(Node):
     def __init__(self, statement):

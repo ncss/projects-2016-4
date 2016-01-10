@@ -29,24 +29,29 @@ def tokenize(source, fname):
             token_end = cur - 1  # Set end of token
             tokens.append(source[token_start:token_end])  # Add previous token
             token_start = cur - 1  # Set start of new token
-            mode = TOKEN_COMMENT if char == '#' else (TOKEN_EXPR if char == '{' else TOKEN_ACTION)  # Set to either expr or action mode
+            # Set to either expr or action mode
+            mode = TOKEN_COMMENT if char == '#' else (TOKEN_EXPR if char == '{' else TOKEN_ACTION)
 
         # Handle token split on }} or %} or #}
         if char == '}' and (prev_char == '}' or prev_char == '%' or prev_char == '#'):
             # Make sure expr token is properly closed by %}
             if mode == TOKEN_EXPR and prev_char != '}':
-                raise TemplateSyntaxException('[' + fname + '] Line ' + str(line) + ': Expected }} got ' + prev_char + '}')
+                raise TemplateSyntaxException('[' + fname + '] Line' + str(line) +
+                                              ': Expected }} got ' + prev_char + '}')
 
             # Make sure action token is properly closed by }}
             if mode == TOKEN_ACTION and prev_char != '%':
-                raise TemplateSyntaxException('[' + fname + '] Line ' + str(line) + ': Expected %} got ' + prev_char + '}')
+                raise TemplateSyntaxException('[' + fname + '] Line ' + str(line) +
+                                              ': Expected %} got ' + prev_char + '}')
 
             # Make sure comment token is properly closed by #}
             if mode == TOKEN_COMMENT and prev_char != '#':
-                raise TemplateSyntaxException('[' + fname + '] Line ' + str(line) + ': Expected #} got ' + prev_char + '}')
+                raise TemplateSyntaxException('[' + fname + '] Line ' + str(line) +
+                                              ': Expected #} got ' + prev_char + '}')
 
             if mode == TOKEN_LITERAL:
-                raise TemplateSyntaxException('[' + fname + '] Line ' + str(line) + ': Unexpected ' + prev_char + '}')
+                raise TemplateSyntaxException('[' + fname + '] Line ' + str(line) +
+                                              ': Unexpected ' + prev_char + '}')
 
             token_end = cur + 1  # Set end of token
             if mode != TOKEN_COMMENT:
@@ -78,4 +83,4 @@ if __name__ == "__main__":
         </html>
             """
 
-    print(tokenize(test))
+    print(tokenize(test, 'none'))

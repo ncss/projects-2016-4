@@ -14,4 +14,3 @@ class BlockNode(Node):
 
     def pprint(self):
         return 'BlockNode()'
-
