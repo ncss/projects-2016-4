@@ -73,8 +73,7 @@ class User:
 
 
 class Location:
-    def __init__(self, id, name, description, picture, uploader, address, latitude, longitude):
-        self.id = id
+    def __init__(self, name, description, picture, uploader, address, longitude, latitude, id = None):
         self.name = name
         self.description = description
         self.picture = picture
@@ -82,6 +81,7 @@ class Location:
         self.address = address
         self.latitude = latitude
         self.longitude = longitude
+        self.id = id
 
     @staticmethod
     def create(name, description, picture, uploader, address, longitude, latitude):
@@ -89,6 +89,7 @@ class Location:
             INSERT INTO locations(name, description, picture, uploader, address, longitude, latitude)
             VALUES(?, ?, ?, ?, ?, ?, ?);
         ''', (name, description, picture, uploader, address, longitude, latitude))
+        return Location(name, description, picture, uploader, address, longitude, latitude)
 
     def change_location(self, address, longitude, latitude):
         cur = conn.execute('''
@@ -97,10 +98,29 @@ class Location:
             WHERE id = ?;''', (address, longitude, latitude, self.id))
 
     @staticmethod
-    def find(id):
+    def find_id(id):
         cur =  conn.execute('''
-            SELECT * FROM locations
+            SELECT name, description, picture, uploader, address, longitude, latitude FROM locations
              WHERE id = ?
              ''', (id,))
         fetch = cur.fetchone()
-        return fetch
+        if fetch is not None:
+            return Location(fetch[0], fetch[1], fetch[2], fetch[3], fetch[4], fetch[5], fetch[6])
+
+    @staticmethod
+    def find_name(name):
+        cur =  conn.execute('''
+            SELECT name, description, picture, uploader, address, longitude, latitude FROM locations
+             WHERE name = ?
+             ''', (name,))
+        fetch = cur.fetchone()
+        if fetch is not None:
+            return Location(fetch[0], fetch[1], fetch[2], fetch[3], fetch[4], fetch[5], fetch[6])
+
+    @staticmethod
+    def findall():
+        cur = conn.execute('SELECT  name, description, picture, uploader, address, longitude, latitude FROM locations')
+        res = []
+        for row in cur:
+            res.append(Location(*row))
+        return res
