@@ -1,0 +1,53 @@
+Do not view this as a html file. View the source.
+
+Template Cheatsheet:
+
+{{ expr }}: Inserts the evaluation of that 'expr'. This is sanitised by the template engine. DO NOT SANITIZE
+    examples:
+        <p> {{ 3 + 7}} </p> becomes <p> 10 </p>
+        <p> {{ x + 3}} </p> where x = 2 becomes <p> 5 </p>
+    This cannot perform assignment of variables, i.e:
+        <p> {{ x = 7}} </p> will fail
+
+{% exec code %}: Allows direct execution of code interpreted as python
+    examples:
+            <p> {% exec value = 24 %} value: {{ value }} </p>
+
+            This will return:
+                <p>  value: 24 </p>
+
+{% include filename %}}: Evaluates the file and places it in the template
+    example:
+        example.html:
+            <em> {{ 'blue' + 'fish' }} </em>
+        <p> {% include example.html %}} </p> becomes <p> <em> bluefish </em> </p>
+
+{% if expr %}:  Will evaluate an if statement based on the expression. All following
+                statements will be nested under this statement until an {% end if %}}
+                node is found. {% elif expr %} and {% else %} are supported
+                If no end if is found, a TemplateSyntaxException is thrown.
+    example:
+        <p> {% if x > 7 %} <em>emphasis</em> <% elif x < 2 %>
+            <strong>bold</strong> <% else %> normal {% end if %}</p>
+
+            This will return:
+                <p> <em>emphasis</em> </p>              if x > 7
+                <p> <strong>emphasis</strong> </p>      if x < 2
+                <p> normal </p>                         otherwise
+
+{% for expr %}: Will execute a for loop using the expression. All following statements will be
+                nested under this statement until an {% end for %} is found. If no end if is
+                found, a TemplateSyntaxException is thrown.
+
+    example:
+        <ul> {% for x in range(5) %} <li>{% if x % 2 == 0 %} {{ str(x) + ' is even' }} {% else %}
+            {{ str(x) + ' is odd' }} {% end if %}</li> {% end for %} </ul>
+
+            This will return:
+                <ul>
+                    <li> 0 is even </li>
+                    <li> 1 is odd  </li>
+                    <li> 2 is even </li>
+                    <li> 3 is odd  </li>
+                    <li> 4 is even </li>
+                </ul>

@@ -47,7 +47,7 @@ def build_tree(token_list, fname):
                     raise TemplateSyntaxException('[' + fname + '] {% end for %} not expected')
                 current_node = current_node.parent
             else:
-                raise TemplateSyntaxException('[' + fname + '] {% ' +  t + ' %} is not a valid command')
+                raise TemplateSyntaxException('[' + fname + '] {% ' + t + ' %} is not a valid command')
         elif t.startswith('{{'):
             current_node.add_child(ExprNode(t[2:-2].strip()))
         else:
@@ -57,8 +57,8 @@ def build_tree(token_list, fname):
     return root_node
 
 if __name__ == '__main__':
-    source = ['<html>', '{{ someVar }}', '{% for x in y %}', '{% if x %}', '<p>', '{% elif someVar %}', 'hello world', '{% else %}', '<marquee>'
-              '{{ x.strip() }}', '</p>', '{% end if %}', '{% end for %}', '</html>']
+    source = ['<html>', '{{ someVar }}', '{% for x in y %}', '{% if x %}', '<p>', '{% elif someVar %}', 'hello world',
+              '{% else %}', '<marquee>', '{{ x.strip() }}', '</p>', '{% end if %}', '{% end for %}', '</html>']
 
     tree = build_tree(source, "<test>")
     print(tree)
