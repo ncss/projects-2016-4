@@ -45,7 +45,7 @@ def tokenize(source):
         prev_char = char  # Update previous char
         cur += 1  # Increment cursor
         if cur == len(source):
-            token_end = cur - 2  # Set end of token
+            token_end = cur  # Set end of token
             tokens.append(source[token_start:token_end])  # Add previous token
             break
     return tokens
