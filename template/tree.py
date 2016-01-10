@@ -7,7 +7,7 @@ from template.include_node import IncludeNode
 from template.literal_node import LiteralNode
 
 
-def build_tree(token_list):
+def build_tree(token_list, fname):
     root_node = BlockNode()
     current_node = root_node
 
@@ -18,7 +18,7 @@ def build_tree(token_list):
                 current_node.add_child(IncludeNode(t[8:]))
             elif t.startswith('for '):
                 if ' in ' not in t:
-                    raise TemplateSyntaxException('For loop must include an \'in\'')
+                    raise TemplateSyntaxException('[' + fname + '] For loop must include an \'in\'')
                 for_node = ForNode(*(t[4:]).split(' in ', 1))
                 current_node.add_child(for_node)
                 current_node = for_node
@@ -28,33 +28,35 @@ def build_tree(token_list):
                 current_node = if_node
             elif t.startswith('elif '):
                 if not isinstance(current_node, IfNode):
-                    raise TemplateSyntaxException('{% elif %} must follow an {% if ... %}')
+                    raise TemplateSyntaxException('[' + fname + '] {% elif %} must follow an {% if ... %}')
                 current_node.add_elif(t[5:])
             elif t == 'else':
                 if not isinstance(current_node, IfNode):
-                    raise TemplateSyntaxException('{% else %} must follow an {% if ... %}')
+                    raise TemplateSyntaxException('[' + fname + '] {% else %} must follow an {% if ... %}')
                 current_node.add_else()
             elif t == 'end if':
                 if not isinstance(current_node, IfNode):
-                    raise TemplateSyntaxException('{% end if %} not expected')
+                    raise TemplateSyntaxException('[' + fname + '] {% end if %} not expected')
                 current_node = current_node.parent
             elif t == 'end for':
                 if not isinstance(current_node, ForNode):
-                    raise TemplateSyntaxException('{% end for %} not expected')
+                    raise TemplateSyntaxException('[' + fname + '] {% end for %} not expected')
                 current_node = current_node.parent
+            else:
+                raise TemplateSyntaxException('[' + fname + '] {% ' +  t + ' %} is not a valid command')
         elif t.startswith('{{'):
             current_node.add_child(ExprNode(t[2:-2].strip()))
         else:
             current_node.add_child(LiteralNode(t))
     if current_node != root_node:
-        raise TemplateSyntaxException('end expected, not found')
+        raise TemplateSyntaxException('[' + fname + '] end expected, not found')
     return root_node
 
 if __name__ == '__main__':
     source = ['<html>', '{{ someVar }}', '{% for x in y %}', '{% if x %}', '<p>', '{% elif someVar %}', 'hello world', '{% else %}', '<marquee>'
               '{{ x.strip() }}', '</p>', '{% end if %}', '{% end for %}', '</html>']
 
-    tree = build_tree(source)
+    tree = build_tree(source, "<test>")
     print(tree)
     print(tree.eval(dict(someVar=24, y=[' hi   ', '', 'cheese'])))
 
@@ -62,6 +64,6 @@ if __name__ == '__main__':
               '{% elif x %}', 'hello world', '{% else %}', '<marquee>',
               '{{ x+5 }}', '</p>', '{% end if %}', '{% end for %}', '</html>']
 
-    tree = build_tree(source)
+    tree = build_tree(source, "<test>")
     print(tree)
     print(tree.eval(dict(someVar=24, y=range(10))))

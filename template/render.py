@@ -1,4 +1,4 @@
-from os.path import dirname, join
+from os.path import dirname, join, basename
 
 from os import listdir
 
@@ -11,8 +11,10 @@ from template.tree import build_tree
 def compile_template(fname):
     with open(fname) as f:
         source = f.read()
-    tokens = tokenize(source)
-    root = build_tree(tokens)
+    fname_base = basename(fname)
+
+    tokens = tokenize(source, fname_base)
+    root = build_tree(tokens, fname_base)
     return root
 
 
