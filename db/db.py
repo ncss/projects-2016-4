@@ -53,18 +53,18 @@ class User:
         )
         self.username = username
 
-    def create(self):
+    def create(username, password, dp, email, fname, lname):
         conn.execute('''INSERT INTO users (username, password, dp, email, fname, lname)
             VALUES(?, ?, NULL, ?, NULL, NULL)''',
-            (self.username, self.password, self.email)
+            (username, password, email)
         )
-        cur = conn.execute('''SELECT id FROM users WHERE username = ?''', (self.username,))
+        cur = conn.execute('''SELECT id FROM users WHERE username = ?''', (username,))
         res = cur.fetchone()
-        self.id = res[0]
-
+        id = res[0]
+        return User(username, password, email)
 
     def save(self):
-        cur = self.conn.execute('''UPDATE users
+        cur = conn.execute('''UPDATE users
             SET password = ?, email = ?
             WHERE username = ?
         ''', (self.password, self.email, self.username))
@@ -72,6 +72,10 @@ class User:
     @staticmethod
     def delete(username):
         cur = conn.execute('DELETE FROM users WHERE username = ?', (username,))
+
+example1 = User.create('jamescurran101', 'passwordthomas', '', 'jamescurran@ncss.com', 'James', 'Curran' )
+example2 = User.create('thomascurran101', 'passwordjames', '', 'thomascurran@ncss.com', 'Thomas', 'Currant' )
+
 
 
 class Location:
