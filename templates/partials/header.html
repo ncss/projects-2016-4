@@ -6,10 +6,15 @@
             <input type="text" placeholder="Search&hellip;" name="search">
             <button type="submit"><span class="fa fa-search"></span></button>
         </form>
-        <div class="header-links">
-            <a href="/account/login" class="button">Login</a>
-            <a href="/account/signup" class="button">Register</a>
-        </div>
+        <nav class="header-links">
+            {% if False %}
+                <a href="/location/create">Create Location</a>
+                <a href="/account/logout">Logout</a>
+            {% else %}
+               <a href="/account/login">Login</a>
+               <a href="/account/signup">Register</a>
+            {% end if %}
+        </nav>
     </header>
 </div>
 
