@@ -68,8 +68,9 @@ class User:
             SET password = ?, email = ?
             WHERE username ="""
 
-    def delete(self):
-        cur = conn.execute('DELETE FROM users WHERE username = ?', (self.username,))
+    @staticmethod
+    def delete(username):
+        cur = conn.execute('DELETE FROM users WHERE username = ?', (username,))
 
 
 class Location:
@@ -110,12 +111,14 @@ class Location:
     @staticmethod
     def find_name(name):
         cur =  conn.execute('''
-            SELECT name, description, picture, uploader, address, longitude, latitude FROM locations
+            SELECT name, description, picture, uploader, address, longitude, latitude, id FROM locations
              WHERE name = ?
              ''', (name,))
         fetch = cur.fetchone()
         if fetch is not None:
-            return Location(fetch[0], fetch[1], fetch[2], fetch[3], fetch[4], fetch[5], fetch[6])
+            location =  Location(fetch[0], fetch[1], fetch[2], fetch[3], fetch[4], fetch[5], fetch[6])
+            location.id = fetch[7]
+            return location
 
     @staticmethod
     def findall():
@@ -124,3 +127,7 @@ class Location:
         for row in cur:
             res.append(Location(*row))
         return res
+
+    @staticmethod
+    def delete(id):
+        cur = conn.execute('DELETE FROM locations WHERE id = ?', (id,))
