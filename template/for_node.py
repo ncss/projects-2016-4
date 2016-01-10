@@ -1,4 +1,3 @@
-from template import expr_node
 from template.block_node import BlockNode
 
 
