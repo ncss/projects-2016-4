@@ -1,0 +1,19 @@
+
+main {
+    text-align: center;
+}
+
+.login-form {
+    display: flex;
+    flex-flow: column;
+    justify-content: center;
+    max-width: 350px;
+    margin: 0 auto;
+}
+
+.login-form input {
+    padding: 10px;
+    margin: 20px 0;
+}
+
+

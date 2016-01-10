@@ -1,0 +1,71 @@
+@import 'normalize.css';
+@import '_elements.css';
+
+*, *::before, *::after {
+	box-sizing: border-box;
+}
+
+.site-logo {
+	font-size: 45px;
+	color: #fff;
+	display: inline-block;
+	font-family: Overlock, cursive;
+}
+
+.container, main, .site-footer {
+	max-width: 1200px;
+	margin: 0 auto;
+}
+
+.site-header {
+	background-color: #009f6a;
+}
+
+.site-header .container {
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+	padding: 0 20px;
+	margin-bottom: 20px;
+}
+
+.header-search input[type=text] {
+	width: 400px;
+	border-radius: 9px;
+	padding: 15px;
+}
+
+.header-search input,
+.header-search button,
+.site-header a {
+	display: inline-block;
+}
+
+.header-search button[type=submit] {
+	height: 50px;
+	width: 50px;
+}
+
+.header-links a {
+	font-family: Overlock, sans-serif;
+	font-size: 1.4rem;
+	padding-left: 1em;
+}
+
+.header-links a:hover {
+	color: #004f35;
+}
+
+.site-header a {
+	color: #fff;
+}
+
+.site-footer {
+	padding-top: 30px;
+	text-align: center;
+	color: #888;
+	font-size: small;
+	letter-spacing: 1px;
+	text-transform: uppercase;
+}
+

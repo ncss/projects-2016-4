@@ -26,10 +26,12 @@ def render(fname, context):
     return rendered
 
 if __name__ == '__main__':
+    # Use case examples for context
     context = {}
     context['name'] = "Jason"
     context['x'] = 42
 
+    # Use case examples for context
     messages = []
     messages.append({'id': 0, 'content': 'Hi this is a test messages...', 'read': True})
     messages.append({'id': 1, 'content': 'So is <b>this</b> one', 'read': True})
@@ -38,7 +40,7 @@ if __name__ == '__main__':
     context['messages'] = messages
 
     # valid test cases
-    valid_tests = ['template.html']
+    valid_tests = ['template.html', 'exec_test.html']
     for test in valid_tests:
         rendered = render('test/' + test, context)
         print('Test: ' + test + '\n' + rendered)

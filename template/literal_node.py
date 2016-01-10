@@ -10,4 +10,4 @@ class LiteralNode(Node):
         return self.token
 
     def pprint(self):
-        return 'LiteralNode({})'.format(self.token[:30])
+        return 'LiteralNode({})'.format(repr(self.token[:30]))

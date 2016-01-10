@@ -1,0 +1,20 @@
+
+<header class="site-header">
+    <div class="container">
+        <h1 class="site-logo"><a href="/"><span class="fa-map-signs fa"></span> Placebook</a></h1>
+        <form class="header-search">
+            <input type="text" placeholder="Search&hellip;" name="search">
+            <button type="submit"><span class="fa fa-search"></span></button>
+        </form>
+        <nav class="header-links">
+            {% if False %}
+                <a href="/location/create">Create Location</a>
+                <a href="/account/logout">Logout</a>
+            {% else %}
+               <a href="/account/login">Login</a>
+               <a href="/account/signup">Register</a>
+            {% end if %}
+        </nav>
+    </div>
+</header>
+
