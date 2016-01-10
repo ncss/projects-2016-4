@@ -53,8 +53,8 @@ form > * {
 input[type=submit], button {
 	background-color: #009f6a;
 	color: #f5f5f5;
-	border-radius: 7px;
-	border-color: #004f35;
+	border-radius: 6px;
+	border-color: #009f6a;
 	padding: 5px 10px;
-	box-shadow:
 }
+
