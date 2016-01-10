@@ -28,7 +28,44 @@
 	text-align: center;
 }
 
-html {
+body {
 	font-size: 14px;
 	font-family: Duru Sans, sans-serif;
+}
+
+
+h1, h2, h3, h4 {
+
+}
+
+h1 {
+	font-size: 1.5rems;
+}
+
+a {
+	color: #009f6a;
+    text-decoration: none;
+}
+a:hover {
+    color: #004f35;
+    text-decoration: none;
+}
+
+
+form > * {
+	display: block;
+	margin-bottom: 1em;
+}
+
+input[type=submit], button {
+	background-color: #009f6a;
+	color: white;
+	border-radius: 6px;
+	border-color: #009f6a;
+	padding: 5px 10px;
+    width: 150px;
+}
+input[type=submit]:hover, button:hover{
+    background-color: #004f35;
+    border-color: #004f35;
 }
