@@ -2,4 +2,4 @@
 __pycache__
 .*.sw[opq]
 .idea/*
-db/database.db
+db/database.db*
