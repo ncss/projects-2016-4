@@ -4,9 +4,9 @@ from template.block_node import BlockNode
 
 class ForNode(BlockNode):
     def __init__(self, var, constraint):
+        super().__init__()
         self.constraint = constraint
         self.var = var
-        self.children = []
 
     def eval(self, context):
         results = []
@@ -15,3 +15,6 @@ class ForNode(BlockNode):
             for child in self.children:
                 results.append(child.eval(context))
         return ''.join(results)
+
+    def pprint(self):
+        return 'ForNode({} in {})'.format(self.var, self.constraint)
