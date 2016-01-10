@@ -1,6 +1,6 @@
 import sqlite3
 
-conn = sqlite3.connect('database.db')
+conn = sqlite3.connect('db/database.db')
 
 def run_sql(sql):
     cur = conn.execute(sql)
@@ -21,7 +21,9 @@ class User:
             FROM users
             WHERE username = ?''', (username,)
         )
-        return User(*cur.fetchone())
+        fetch = cur.fetchone()
+        if fetch is not None:
+            return User(*fetch)
 
     @staticmethod
     def findall():

@@ -1,5 +1,6 @@
 from template.render import render
 from tornado.ncss import Server
+from db.db import User
 
 def get_login(response):
     return response.get_secure_cookie('username')
@@ -58,7 +59,8 @@ def profile_handler(response):
 def login_authentication(response):
     username = response.get_field('username')
     password = response.get_field('password')
-    if username == 'james' and password == 'curran':
+    user = User.find(username)
+    if user and username == user.username and password == user.password:
         response.set_secure_cookie('username', username)
         response.redirect("/")
     else:
