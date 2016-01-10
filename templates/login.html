@@ -1,28 +1,28 @@
-{% include header.html %}
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>Login to Placebook</title>
+    {% include partials/head_meta.html %}
+    <link href="/static/css/login.css" rel="stylesheet">
+</head>
+<body>
 
-        <form action="/account/login" method="post">
-            <fieldset>
-                <legend>
-                    Login
-                </legend>
-                <p>
-                    <label>Username: </label>
-                    <input type="text"
-                           name="username">
-                    <label>Password: </label>
-                    <input type="password"
-                           name="password">
-                    <input type = "submit"
-                           name = "authenticate">
-                </p>
-            </fieldset>
-        </form>
+{% include partials/header.html %}
 
-    <input type="text" placeholder="Text input">
-    <input type="file">
+<main>
 
-    <input type="submit" class="button-primary" value="Primary">
-    <button class="button-secondary">Secondary</button>
+    <h1>Login</h1>
 
+    <form action="/account/login" class="login-form" method="post">
+        <input type="text" placeholder="Username" name="username">
+        <input type="password" placeholder="Password" name="password">
+        <input type="submit" value="Login">
+    </form>
 
-{% include footer.html %}
+</main>
+
+{% include partials/footer.html %}
+
+</body>
+</html>

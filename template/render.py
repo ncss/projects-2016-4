@@ -38,7 +38,7 @@ if __name__ == '__main__':
     context['messages'] = messages
 
     # valid test cases
-    valid_tests = ['template.html']
+    valid_tests = ['template.html', 'exec_test.html']
     for test in valid_tests:
         rendered = render('test/' + test, context)
         print('Test: ' + test + '\n' + rendered)

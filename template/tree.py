@@ -1,5 +1,6 @@
 from template.block_node import BlockNode
 from template.exceptions import TemplateSyntaxException
+from template.exec_node import ExecNode
 from template.expr_node import ExprNode
 from template.for_node import ForNode
 from template.if_node import IfNode
@@ -16,6 +17,9 @@ def build_tree(token_list, fname):
             t = t[2:-2].strip()
             if t.startswith('include '):
                 current_node.add_child(IncludeNode(t[8:]))
+            elif t.startswith('exec '):
+                exec_node = ExecNode(t[5:].strip())
+                current_node.add_child(exec_node)
             elif t.startswith('for '):
                 if ' in ' not in t:
                     raise TemplateSyntaxException('[' + fname + '] For loop must include an \'in\'')
