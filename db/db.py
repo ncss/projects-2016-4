@@ -8,26 +8,28 @@ def run_sql(sql):
     return anything
 
 class User:
-    def __init__(self, conn, username, password, email, id=None):
+    def __init__(self, username, password, email, id=None):
         self.username = username
         self.password = password
         self.email = email
         self.id = id
 
     @staticmethod
-    def find(self, username):
+    def find(username):
         cur = conn.execute('''
             SELECT username, password, email, id
             FROM users
             WHERE username = ?''', (username,)
         )
-        return User(self.conn, *cur.fetchone())
+        return User(*cur.fetchone())
 
     @staticmethod
-    def find_all(self):
-        cur = conn.execute('SELECT * FROM users')
+    def findall():
+        cur = conn.execute('SELECT username, password, email, id FROM users')
+        res = []
         for row in cur:
-            print(row)
+            res.append(User(*row))
+        return res
 
     def change_password(self, password):
         conn.execute('''UPDATE users
@@ -67,7 +69,7 @@ class User:
             WHERE username ="""
 
     def delete(self):
-        cur = self.conn.execute('DELETE FROM users WHERE username = ?', (self.username,))
+        cur = conn.execute('DELETE FROM users WHERE username = ?', (self.username,))
 
 
 class Location:
