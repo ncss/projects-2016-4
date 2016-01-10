@@ -2,10 +2,12 @@ import sqlite3
 
 conn = sqlite3.connect('database.db')
 
+
 def run_sql(sql):
     cur = conn.execute(sql)
     anything = cur.fetchone()
     return anything
+
 
 class User:
     def __init__(self, username, password, email, id=None):
@@ -19,9 +21,10 @@ class User:
         cur = conn.execute('''
             SELECT username, password, email, id
             FROM users
-            WHERE username = ?''', (username,)
-        )
-        return User(*cur.fetchone())
+            WHERE username = ?''', (username,))
+        res = cur.fetchone()
+        if res:
+            return User(*res)
 
     @staticmethod
     def findall():
@@ -34,48 +37,45 @@ class User:
     def change_password(self, password):
         conn.execute('''UPDATE users
             SET password = ?
-            WHERE username = ?''', (password, self.username)
-        )
+            WHERE username = ?''', (password, self.username))
         self.password = password
 
     def change_email(self, email):
         conn.execute('''UPDATE users
             SET email = ?
-            WHERE username = ?''', (email, self.username)
-        )
+            WHERE username = ?''', (email, self.username))
         self.email = email
 
     def change_username(self, username):
         conn.execute('''
             UPDATE users
             SET username = ?
-            WHERE username = ?''', (username, self.username)
-        )
+            WHERE username = ?''', (username, self.username))
         self.username = username
 
+    @staticmethod
     def create(username, password, dp, email, fname, lname):
         conn.execute('''INSERT INTO users (username, password, dp, email, fname, lname)
-            VALUES(?, ?, NULL, ?, NULL, NULL)''',
-            (username, password, email)
+            VALUES(?, ?, ?, ?, ?, ?)''',
+            (username, password, dp, email, fname, lname)
         )
         cur = conn.execute('''SELECT id FROM users WHERE username = ?''', (username,))
         res = cur.fetchone()
-        id = res[0]
-        return User(username, password, email)
+        return User(username, password, email, res[0])
 
     def save(self):
-        cur = conn.execute('''UPDATE users
+        conn.execute('''UPDATE users
             SET password = ?, email = ?
             WHERE username = ?
         ''', (self.password, self.email, self.username))
 
     @staticmethod
     def delete(username):
-        cur = conn.execute('DELETE FROM users WHERE username = ?', (username,))
+        conn.execute('DELETE FROM users WHERE username = ?', (username,))
 
 
 class Location:
-    def __init__(self, name, description, picture, uploader, address, longitude, latitude, id = None):
+    def __init__(self, name, description, picture, uploader, address, longitude, latitude, id=None):
         self.name = name
         self.description = description
         self.picture = picture
@@ -87,43 +87,42 @@ class Location:
 
     @staticmethod
     def create(name, description, picture, uploader, address, longitude, latitude):
-        cur = conn.execute('''
+        conn.execute('''
             INSERT INTO locations(name, description, picture, uploader, address, longitude, latitude)
             VALUES(?, ?, ?, ?, ?, ?, ?);
         ''', (name, description, picture, uploader, address, longitude, latitude))
         return Location(name, description, picture, uploader, address, longitude, latitude)
 
     def change_location(self, address, longitude, latitude):
-        cur = conn.execute('''
+        conn.execute('''
             UPDATE location
             SET address = ?, longitude = ?, latitude = ?
             WHERE id = ?;''', (address, longitude, latitude, self.id))
 
     @staticmethod
     def find_id(id):
-        cur =  conn.execute('''
+        cur = conn.execute('''
             SELECT name, description, picture, uploader, address, longitude, latitude FROM locations
              WHERE id = ?
              ''', (id,))
-        fetch = cur.fetchone()
-        if fetch is not None:
-            return Location(fetch[0], fetch[1], fetch[2], fetch[3], fetch[4], fetch[5], fetch[6])
+        res = cur.fetchone()
+        if res:
+            return Location(*res)
 
     @staticmethod
     def find_name(name):
-        cur =  conn.execute('''
+        cur = conn.execute('''
             SELECT name, description, picture, uploader, address, longitude, latitude, id FROM locations
              WHERE name = ?
              ''', (name,))
-        fetch = cur.fetchone()
-        if fetch is not None:
-            location =  Location(fetch[0], fetch[1], fetch[2], fetch[3], fetch[4], fetch[5], fetch[6])
-            location.id = fetch[7]
+        res = cur.fetchone()
+        if res:
+            location = Location(*res)
             return location
 
     @staticmethod
     def findall():
-        cur = conn.execute('SELECT  name, description, picture, uploader, address, longitude, latitude FROM locations')
+        cur = conn.execute('SELECT name, description, picture, uploader, address, longitude, latitude FROM locations')
         res = []
         for row in cur:
             res.append(Location(*row))
@@ -131,10 +130,22 @@ class Location:
 
     @staticmethod
     def delete(id):
-        cur = conn.execute('DELETE FROM locations WHERE id = ?', (id,))
+        conn.execute('DELETE FROM locations WHERE id = ?', (id,))
 
     def save(self):
-        cur = conn.execute('''UPDATE locations
+        conn.execute('''UPDATE locations
             SET name = ?, description = ?, picture = ?, uploader = ?, address = ?, longitude = ?, latitude = ?
             WHERE id = ?
-        ''', ( self.name, self.description, self.picture, self.uploader, self.address, self.longitude, self.latitude, self.id))
+        ''', (self.name, self.description, self.picture, self.uploader, self.address, self.longitude, self.latitude, self.id))
+
+
+class Tag:
+    def __init__(self, name, place):
+        self.name = name
+        self.place = place
+
+    @staticmethod
+    def create(name, place):
+        conn.execute('''INSERT INTO tags(name, place)
+            VALUES(?, ?)''', (name, place))
+
