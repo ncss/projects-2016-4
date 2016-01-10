@@ -1,0 +1,5 @@
+Entry number {{ msg['id'] }}
+Content: {{ msg['content'] }}
+{% if msg['read'] %}
+Message has been seen.
+{% end if %}
