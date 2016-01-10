@@ -12,16 +12,16 @@
 	font-family: Overlock, cursive;
 }
 
-.site-header, main, .site-footer {
+.container, main, .site-footer {
 	max-width: 1200px;
 	margin: 0 auto;
 }
 
-.header-wrapper {
+.site-header {
 	background-color: #009f6a;
 }
 
-.site-header {
+.site-header .container {
 	display: flex;
 	justify-content: space-between;
 	align-items: center;
