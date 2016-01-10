@@ -73,10 +73,6 @@ class User:
     def delete(username):
         cur = conn.execute('DELETE FROM users WHERE username = ?', (username,))
 
-example1 = User.create('jamescurran101', 'passwordthomas', '', 'jamescurran@ncss.com', 'James', 'Curran' )
-example2 = User.create('thomascurran101', 'passwordjames', '', 'thomascurran@ncss.com', 'Thomas', 'Currant' )
-
-
 
 class Location:
     def __init__(self, name, description, picture, uploader, address, longitude, latitude, id = None):
@@ -142,5 +138,3 @@ class Location:
             SET name = ?, description = ?, picture = ?, uploader = ?, address = ?, longitude = ?, latitude = ?
             WHERE id = ?
         ''', ( self.name, self.description, self.picture, self.uploader, self.address, self.longitude, self.latitude, self.id))
-
-r = Location.create('Riva\'s Cafe', 'delicisiouly ibeauitlky', 'img', 2, '2 Sydney Way, QLD', 00, 0)
