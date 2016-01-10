@@ -64,9 +64,10 @@ class User:
 
 
     def save(self):
-        """cur = self.conn.execute('''UPDATE users
+        cur = self.conn.execute('''UPDATE users
             SET password = ?, email = ?
-            WHERE username ="""
+            WHERE username = ?
+        ''', (self.password, self.email, self.username))
 
     @staticmethod
     def delete(username):
@@ -131,3 +132,11 @@ class Location:
     @staticmethod
     def delete(id):
         cur = conn.execute('DELETE FROM locations WHERE id = ?', (id,))
+
+    def save(self):
+        cur = conn.execute('''UPDATE locations
+            SET name = ?, description = ?, picture = ?, uploader = ?, address = ?, longitude = ?, latitude = ?
+            WHERE id = ?
+        ''', ( self.name, self.description, self.picture, self.uploader, self.address, self.longitude, self.latitude, self.id))
+
+r = Location.create('Riva\'s Cafe', 'delicisiouly ibeauitlky', 'img', 2, '2 Sydney Way, QLD', 00, 0)
