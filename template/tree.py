@@ -26,6 +26,10 @@ def build_tree(token_list):
                 if_node = IfNode(t[3:])
                 current_node.add_child(if_node)
                 current_node = if_node
+            elif t.startswith('elif '):
+                current_node.add_elif(t[5:])
+            elif t == 'else':
+                current_node.add_else();
             elif t == 'end if':
                 current_node = current_node.parent
             elif t == 'end for':
@@ -37,9 +41,17 @@ def build_tree(token_list):
     return root_node
 
 if __name__ == '__main__':
-    source = ['<html>', '{{ someVar }}', '{% for x in y %}', '{% if x %}', '<p>',
+    source = ['<html>', '{{ someVar }}', '{% for x in y %}', '{% if x %}', '<p>', '{% elif someVar %}', 'hello world', '{% else %}', '<marquee>'
               '{{ x.strip() }}', '</p>', '{% end if %}', '{% end for %}', '</html>']
 
     tree = build_tree(source)
     print(tree)
     print(tree.eval(dict(someVar=24, y=[' hi   ', '', 'cheese'])))
+
+    source = ['<html>', '{{ someVar }}', '{% for x in y %}', '{% if x > 7 %}', '<p>',
+              '{% elif x %}', 'hello world', '{% else %}', '<marquee>',
+              '{{ x+5 }}', '</p>', '{% end if %}', '{% end for %}', '</html>']
+
+    tree = build_tree(source)
+    print(tree)
+    print(tree.eval(dict(someVar=24, y=range(10))))
