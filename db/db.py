@@ -1,13 +1,11 @@
 import sqlite3
 
-class DatabaseConnection:
-    def connect(self):
-        self.conn = sqlite3.connect('database.db')
+conn = sqlite3.connect('database.db')
 
-    def run_sql(self, sql):
-        cur = self.conn.execute(sql)
-        anything = cur.fetchone()
-        print(anything)
+def run_sql(sql):
+    cur = conn.execute(sql)
+    anything = cur.fetchone()
+    return anything
 
 class User:
     def __init__(self, conn, id, username, password, email):
@@ -39,6 +37,32 @@ class User:
             WHERE id = ?''', (email, self.id)
         )
         self.email = email
+
+class Location:
+    def __init__(self, id, name, description, picture, uploader, address, latitude, longitude):
+        self.id = id
+        self.name = name
+        self.description = description
+        self.picture = picture
+        self.uploader = uploader
+        self.address = address
+        self.latitude = latitude
+        self.longitude = longitude
+
+    @staticmethod
+    def create(name, description, picture, uploader, address, longitude, latitude):
+        cur = conn.execute('''
+            INSERT INTO location(name, description, picture, uploader, address, longitude, latitude)
+            VALUES(?, ?, ?, ?, ?, ?, ?);
+        ''' (name, description, picture, uploader, address, longitude, latitude) )
+
+    def change_location(self, address, longitude, latitude):
+        cur = conn.execute('''
+            UPDATE location
+            SET address = ?
+            SET longitude = ?
+            SET latitude = ?
+            WHERE id = ?;''', (address, longitude, latitude, self.id))
 
 
 
