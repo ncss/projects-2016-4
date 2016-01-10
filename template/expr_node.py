@@ -7,7 +7,7 @@ class ExprNode(Node):
         self.expression = expression
 
     def eval(self, context):
-        return eval(self.expression, context)
+        return str(eval(self.expression, context))
 
     def pprint(self):
         return 'ExprNode({})'.format(self.expression)

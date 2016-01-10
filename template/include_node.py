@@ -1,5 +1,4 @@
 from template.node import Node
-from template import render
 
 
 class IncludeNode(Node):
@@ -8,8 +7,9 @@ class IncludeNode(Node):
         self.reference = reference
 
     def eval(self, context):
-        readFile = render(self.reference, context)
-        return readFile
+        from template.render import render
+        read_file = render(self.reference, context)
+        return read_file
 
     def pprint(self):
         return 'IncludeNode({})'.format(self.reference)
