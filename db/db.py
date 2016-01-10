@@ -53,28 +53,33 @@ class User:
         )
         self.username = username
 
-    def create(self):
+    def create(username, password, dp, email, fname, lname):
         conn.execute('''INSERT INTO users (username, password, dp, email, fname, lname)
             VALUES(?, ?, NULL, ?, NULL, NULL)''',
-            (self.username, self.password, self.email)
+            (username, password, email)
         )
-        cur = conn.execute('''SELECT id FROM users WHERE username = ?''', (self.username,))
+        cur = conn.execute('''SELECT id FROM users WHERE username = ?''', (username,))
         res = cur.fetchone()
-        self.id = res[0]
-
+        id = res[0]
+        return User(username, password, email)
 
     def save(self):
-        """cur = self.conn.execute('''UPDATE users
+        cur = conn.execute('''UPDATE users
             SET password = ?, email = ?
-            WHERE username ="""
+            WHERE username = ?
+        ''', (self.password, self.email, self.username))
 
-    def delete(self):
-        cur = conn.execute('DELETE FROM users WHERE username = ?', (self.username,))
+    @staticmethod
+    def delete(username):
+        cur = conn.execute('DELETE FROM users WHERE username = ?', (username,))
+
+example1 = User.create('jamescurran101', 'passwordthomas', '', 'jamescurran@ncss.com', 'James', 'Curran' )
+example2 = User.create('thomascurran101', 'passwordjames', '', 'thomascurran@ncss.com', 'Thomas', 'Currant' )
+
 
 
 class Location:
-    def __init__(self, id, name, description, picture, uploader, address, latitude, longitude):
-        self.id = id
+    def __init__(self, name, description, picture, uploader, address, longitude, latitude, id = None):
         self.name = name
         self.description = description
         self.picture = picture
@@ -82,6 +87,7 @@ class Location:
         self.address = address
         self.latitude = latitude
         self.longitude = longitude
+        self.id = id
 
     @staticmethod
     def create(name, description, picture, uploader, address, longitude, latitude):
@@ -89,6 +95,7 @@ class Location:
             INSERT INTO locations(name, description, picture, uploader, address, longitude, latitude)
             VALUES(?, ?, ?, ?, ?, ?, ?);
         ''', (name, description, picture, uploader, address, longitude, latitude))
+        return Location(name, description, picture, uploader, address, longitude, latitude)
 
     def change_location(self, address, longitude, latitude):
         cur = conn.execute('''
@@ -97,10 +104,43 @@ class Location:
             WHERE id = ?;''', (address, longitude, latitude, self.id))
 
     @staticmethod
-    def find(id):
+    def find_id(id):
         cur =  conn.execute('''
-            SELECT * FROM locations
+            SELECT name, description, picture, uploader, address, longitude, latitude FROM locations
              WHERE id = ?
              ''', (id,))
         fetch = cur.fetchone()
-        return fetch
+        if fetch is not None:
+            return Location(fetch[0], fetch[1], fetch[2], fetch[3], fetch[4], fetch[5], fetch[6])
+
+    @staticmethod
+    def find_name(name):
+        cur =  conn.execute('''
+            SELECT name, description, picture, uploader, address, longitude, latitude, id FROM locations
+             WHERE name = ?
+             ''', (name,))
+        fetch = cur.fetchone()
+        if fetch is not None:
+            location =  Location(fetch[0], fetch[1], fetch[2], fetch[3], fetch[4], fetch[5], fetch[6])
+            location.id = fetch[7]
+            return location
+
+    @staticmethod
+    def findall():
+        cur = conn.execute('SELECT  name, description, picture, uploader, address, longitude, latitude FROM locations')
+        res = []
+        for row in cur:
+            res.append(Location(*row))
+        return res
+
+    @staticmethod
+    def delete(id):
+        cur = conn.execute('DELETE FROM locations WHERE id = ?', (id,))
+
+    def save(self):
+        cur = conn.execute('''UPDATE locations
+            SET name = ?, description = ?, picture = ?, uploader = ?, address = ?, longitude = ?, latitude = ?
+            WHERE id = ?
+        ''', ( self.name, self.description, self.picture, self.uploader, self.address, self.longitude, self.latitude, self.id))
+
+r = Location.create('Riva\'s Cafe', 'delicisiouly ibeauitlky', 'img', 2, '2 Sydney Way, QLD', 00, 0)

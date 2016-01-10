@@ -1,11 +1,28 @@
 {% include header.html %}
 
-<form action="/account/login/">
+        <form action="/account/login" method="post">
+            <fieldset>
+                <legend>
+                    Login
+                </legend>
+                <p>
+                    <label>Username: </label>
+                    <input type="text"
+                           name="username">
+                    <label>Password: </label>
+                    <input type="password"
+                           name="password">
+                    <input type = "submit"
+                           name = "authenticate">
+                </p>
+            </fieldset>
+        </form>
+
     <input type="text" placeholder="Text input">
     <input type="file">
 
     <input type="submit" class="button-primary" value="Primary">
     <button class="button-secondary">Secondary</button>
-</form>
+
 
 {% include footer.html %}
