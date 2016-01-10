@@ -13,12 +13,35 @@
 }
 
 .site-logo {
-	font-family: Cityscape, sans-serif;
-	text-transform: uppercase;
 	font-size: 50px;
 	background-color: #009f6a;
 	color: #fff;
+	padding: .3em 1em;
+	text-shadow: 3px;
+	display: inline-block;
+}
 
+.cityscape {
+	font-family: Cityscape, sans-serif;
+	text-transform: uppercase;
+	font-weight: normal;
+}
+
+.norican {
+	font-family: Norican, cursive;
+}
+
+.satisfy {
+	font-family: Satisfy, cursive;
+}
+
+
+.overlock {
+	font-family: Overlock, cursive;
+}
+
+.signika {
+	font-family: signika, sans-serif;
 }
 
 html {
