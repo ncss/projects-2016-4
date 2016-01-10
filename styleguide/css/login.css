@@ -1,0 +1,34 @@
+@import "normalize.css";
+
+.site-logo {
+	font-size: 45px;
+	color: #fff;
+	display: inline-block;
+	font-family: Overlock, cursive;
+}
+
+.site-header, main, .site-footer {
+	max-width: 1200px;
+	margin: 0 auto;
+}
+
+.header-wrapper {
+	background-color: #009f6a;
+}
+
+.site-header {
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+	padding: 0 20px;
+}
+
+.site-footer {
+	padding-top: 30px;
+	text-align: center;
+}
+
+html {
+	font-size: 14px;
+	font-family: Duru Sans, sans-serif;
+}
