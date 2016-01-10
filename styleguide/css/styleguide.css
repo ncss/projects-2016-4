@@ -1,25 +1,5 @@
 @import "normalize.css";
 
-@font-face {
-    font-family: 'Cityscape';
-    src: url('../fonts/cityscape_font-webfont.eot');
-    src: url('../fonts/cityscape_font-webfont.eot?#iefix') format('embedded-opentype'),
-         url('../fonts/cityscape_font-webfont.woff2') format('woff2'),
-         url('../fonts/cityscape_font-webfont.woff') format('woff'),
-         url('../fonts/cityscape_font-webfont.ttf') format('truetype'),
-         url('../fonts/cityscape_font-webfont.svg#cityscape_fontcityscape_font') format('svg');
-    font-weight: normal;
-    font-style: normal;
-}
-
-.site-logo {
-	font-family: Cityscape, sans-serif;
-	text-transform: uppercase;
-	font-size: 50px;
-	background-color: #009f6a;
-	color: #fff;
-
-}
 
 html {
 	font-size: 14px;
@@ -32,7 +12,7 @@ body {
 }
 
 h1, h2, h3, h4 {
-	font-weight: bold;
+
 }
 
 h1 {
@@ -40,8 +20,12 @@ h1 {
 }
 
 a {
-	color: ;
-
+	color: #009f6a;
+    text-decoration: none;
+}
+a:hover {
+    color: #004f35;
+    text-decoration: none;
 }
 
 
@@ -52,9 +36,37 @@ form > * {
 
 input[type=submit], button {
 	background-color: #009f6a;
-	color: #f5f5f5;
+	color: white;
 	border-radius: 6px;
 	border-color: #009f6a;
 	padding: 5px 10px;
+    width: 150px;
+}
+input[type=submit]:hover, button:hover{
+    background-color: #004f35;
+    border-color: #004f35;
+}
+
+dl {
+  width: 300px;
+  overflow: hidden;
+  padding: 0;
+  margin: 0;
+  margin-bottom: 20px;
+}
+dt {
+  float: left;
+  width: 30%;
+  /* adjust the width; make sure the total of both is 100% */
+  padding: 0;
+  margin: 0;
+  font-weight: bold;
+}
+dd {
+  float: left;
+  width: 70%;
+  /* adjust the width; make sure the total of both is 100% */
+  padding: 0;
+  margin: 0;
 }
 
