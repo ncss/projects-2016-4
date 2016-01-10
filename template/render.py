@@ -1,5 +1,8 @@
 from os.path import dirname, join
 
+from os import listdir
+
+from template.exceptions import TemplateSyntaxException
 from template.tokenizer import tokenize
 from template.tree import build_tree
 
@@ -27,10 +30,23 @@ if __name__ == '__main__':
 
     messages = []
     messages.append({'id': 0, 'content': 'Hi this is a test messages...', 'read': True})
-    messages.append({'id': 1, 'content': 'So is this one', 'read': True})
+    messages.append({'id': 1, 'content': 'So is <b>this</b> one', 'read': True})
     messages.append({'id': 2, 'content': 'Lorem ipsum dolor sit amet', 'read': False})
     messages.append({'id': 3, 'content': 'TEMPLATES ARE COOL', 'read': True})
     context['messages'] = messages
 
-    rendered = render('test/broken/unended_if.html', context)
-    print(rendered)
+    # valid test cases
+    valid_tests = ['template.html']
+    for test in valid_tests:
+        rendered = render('test/' + test, context)
+        print('Test: ' + test + '\n' + rendered)
+
+    invalid_tests = listdir(join(dirname(__file__), '../templates/test/broken'))
+    for test in invalid_tests:
+        try:
+            print('Test: ' + test)
+            rendered = render('test/broken/' + test, context)
+            print(rendered)
+            print('TEST FAILED')
+        except TemplateSyntaxException as e:
+            print('Exception caught! ' + str(e) + '\n')

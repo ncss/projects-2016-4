@@ -27,17 +27,27 @@ def build_tree(token_list):
                 current_node.add_child(if_node)
                 current_node = if_node
             elif t.startswith('elif '):
+                if not isinstance(current_node, IfNode):
+                    raise TemplateSyntaxException('{% elif %} must follow an {% if ... %}')
                 current_node.add_elif(t[5:])
             elif t == 'else':
-                current_node.add_else();
+                if not isinstance(current_node, IfNode):
+                    raise TemplateSyntaxException('{% else %} must follow an {% if ... %}')
+                current_node.add_else()
             elif t == 'end if':
+                if not isinstance(current_node, IfNode):
+                    raise TemplateSyntaxException('{% end if %} not expected')
                 current_node = current_node.parent
             elif t == 'end for':
+                if not isinstance(current_node, ForNode):
+                    raise TemplateSyntaxException('{% end for %} not expected')
                 current_node = current_node.parent
         elif t.startswith('{{'):
             current_node.add_child(ExprNode(t[2:-2].strip()))
         else:
             current_node.add_child(LiteralNode(t))
+    if current_node != root_node:
+        raise TemplateSyntaxException('end expected, not found')
     return root_node
 
 if __name__ == '__main__':

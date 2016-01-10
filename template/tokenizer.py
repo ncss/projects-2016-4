@@ -3,6 +3,7 @@ from template.exceptions import TemplateSyntaxException
 TOKEN_LITERAL = 0
 TOKEN_EXPR = 1
 TOKEN_ACTION = 2
+TOKEN_COMMENT = 3
 
 
 # Convert source code to list of tokens
@@ -21,25 +22,30 @@ def tokenize(source):
         if char == '\n':
             line += 1
 
-        # Handle token split on {{ or {%
-        if (char == '{' or char == '%') and prev_char == '{':
+        # Handle token split on {{ or {% or {#
+        if (char == '{' or char == '%' or char == '#') and prev_char == '{':
             token_end = cur - 1  # Set end of token
             tokens.append(source[token_start:token_end])  # Add previous token
             token_start = cur - 1  # Set start of new token
-            mode = TOKEN_EXPR if char == '{' else TOKEN_ACTION  # Set to either expr or action mode
+            mode = TOKEN_COMMENT if char == '#' else (TOKEN_EXPR if char == '{' else TOKEN_ACTION)  # Set to either expr or action mode
 
-        # Handle token split on }} or %}
-        if char == '}' and (prev_char == '}' or prev_char == '%'):
+        # Handle token split on }} or %} or #}
+        if char == '}' and (prev_char == '}' or prev_char == '%' or prev_char == '#'):
             # Make sure expr token is properly closed by %}
-            if mode == TOKEN_EXPR and prev_char == '%':
-                    raise TemplateSyntaxException('Line ' + str(line) + ': Expected }} got %}')
+            if mode == TOKEN_EXPR and prev_char != '}':
+                    raise TemplateSyntaxException('Line ' + str(line) + ': Expected }} got ' + prev_char + '}')
 
             # Make sure action token is properly closed by }}
-            if mode == TOKEN_ACTION and prev_char == '}':
-                    raise TemplateSyntaxException('Line ' + str(line) + ': Expected %} got }}')
+            if mode == TOKEN_ACTION and prev_char != '%':
+                    raise TemplateSyntaxException('Line ' + str(line) + ': Expected %} got ' + prev_char + '}')
+
+            # Make sure comment token is properly closed by #}
+            if mode == TOKEN_COMMENT and prev_char != '#':
+                    raise TemplateSyntaxException('Line ' + str(line) + ': Expected #} got ' + prev_char + '}')
 
             token_end = cur + 1  # Set end of token
-            tokens.append(source[token_start:token_end])  # Add previous token
+            if mode != TOKEN_COMMENT:
+                tokens.append(source[token_start:token_end])  # Add previous token
             token_start = cur + 1  # Set start of new token
 
         prev_char = char  # Update previous char

@@ -1,5 +1,6 @@
-from template.node import Node
+import html
 
+from template.node import Node
 
 class ExprNode(Node):
     def __init__(self, expression):
@@ -7,7 +8,7 @@ class ExprNode(Node):
         self.expression = expression
 
     def eval(self, context):
-        return str(eval(self.expression, context))
+        return html.escape(str(eval(self.expression, context)))
 
     def pprint(self):
         return 'ExprNode({})'.format(self.expression)
