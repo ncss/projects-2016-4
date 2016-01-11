@@ -9,6 +9,7 @@ main h1{
 }
 
 .result img {
+    min-height: 250px;
     min-width: 250px;
     max-width: 250px;
     margin-bottom:10px;
