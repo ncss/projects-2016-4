@@ -12,11 +12,21 @@
 
 <main>
 
-    <h1>Login</h1>
     <form action="/account/login" class="login-form" method="post">
-        <input type="text" placeholder="Username" name="username">
-        <input type="password" placeholder="Password" name="password">
-        <input type="submit" value="Login">
+        <fieldset>
+            <legend>Login</legend>
+
+            <p>
+                <label>Username:</label>
+                <input type="text" placeholder="Username" name="username">
+            </p>
+            <p>
+                <label>Password:</label>
+                <input type="password" placeholder="Password" name="password">
+            </p>
+
+            <input type="submit" value="Login">
+        </fieldset>
     </form>
 
 </main>
