@@ -21,7 +21,7 @@
             <h2>{{ location.name }}</h2>
             <div id="star">
                 {% for i in range(5) %}
-                    {% if i >= int(round(location.score)) %}
+                    {% if i >= 2 %}
                         <div id="goldstar" class="{{i}}">&#9733;</div>
                     {% else %}
                         <div id="blackstar" class="{{i}}">&#9733;</div>
