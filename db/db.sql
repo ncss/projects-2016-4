@@ -45,6 +45,6 @@ CREATE TABLE comments (
     comment TEXT NOT NULL,
     place INTEGER NOT NULL,
     FOREIGN KEY (place) REFERENCES locations (id),
-    FOREIGN KEY (user) REFERENCES users(id),
+    FOREIGN KEY (author) REFERENCES users(id),
     PRIMARY KEY (id)
 )
