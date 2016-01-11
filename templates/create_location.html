@@ -16,6 +16,11 @@
 
 
     <form enctype="multipart/form-data" action="/location/create" class="login-form" method="post">
+        {% if error %}
+            <p class="error">
+                {{ error }}
+            </p>
+        {% end if %}
         <input type="text" placeholder="Name" name="name" required>
         <!-- <input type="text" placeholder="Description" name="description"> -->
         <textarea cols="25" rows="7" placeholder="Description" name="description" required></textarea>
