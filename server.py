@@ -5,7 +5,11 @@ import hashlib
 import re
 
 def get_login(response):
-    return response.get_secure_cookie('username')
+    user_name = response.get_secure_cookie('username')
+    if user_name:
+        return user_name.decode()
+    else:
+        return None
 
 def login_check_decorator(fn):
     def inner(response, *args, **kwargs):
@@ -76,7 +80,8 @@ def user_handler(response, username):
 @login_check_decorator
 def profile_handler(response):
     logged_in = get_login(response)
-    response.write("username: {}".format(logged_in))
+    context = {}
+    render_page('account.html', response, context)
 
 def login_authentication(response):
     username = response.get_field('username')
