@@ -213,27 +213,33 @@ def location_editor(response, id):
     #file_output.close()
 
     context = {'error': None}
-
+    location = Location.find_id(id)
+    if location is None:
+        context['error'] = 'Place does not exist'
+        render_page('edit_location.html', response, context)
+        return
     name = response.get_field('name')
     description = response.get_field('description')
     address = response.get_field('address')
     username = get_login(response)
     user = User.find(username)
+    Location.change_location(id, name, description, location.picture, address, location.latitude, location.longitude)
+    response.redirect("/location/" + id)
 
-    try:
-        lat = float(response.get_field('lat'))
-        long = float(response.get_field('long'))
-    except ValueError:
-        context['error'] = 'Invalid latitude or longitude'
-        render_page('create_location.html', response, context)
-        return
-    if Location.find_name(name):
-        context['error'] = 'Place already exists'
-        render_page('create_location.html', response, context)
-    else:
-        Location.create(name, description, filename_hash, user.id, address, lat, long)
-        response.redirect("/location/{}".format(Location.find_name(name).id))
-    return
+    #try:
+     #   lat = float(response.get_field('lat'))
+      #  long = float(response.get_field('long'))
+    #except ValueError:
+     #   context['error'] = 'Invalid latitude or longitude'
+      #  render_page('create_location.html', response, context)
+       # return
+    #if Location.find_name(name):
+     #   context['error'] = 'Place already exists'
+      #  render_page('create_location.html', response, context)
+    #else:
+     #   Location.create(name, description, filename_hash, user.id, address, lat, long)
+      #  response.redirect("/location/{}".format(Location.find_name(name).id))
+    #return
 
 
 if __name__ == '__main__':
