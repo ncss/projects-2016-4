@@ -5,27 +5,24 @@
         <title>User Account</title>
         {% include partials/head_meta.html %}
         <link href="/static/css/login.css" rel="stylesheet">
-        <style>
-            .user-details {
-                margin-bottom: 50px;
-            }
-        </style>
+        <link href="/static/css/account.css" rel="stylesheet">
+
     </head>
     <body>
 
         {% include partials/header.html %}
 
-        <main>
-            
+        <main class="login-form">
+            <fieldset>
+                <legend>Bobby Tables</legend>
             <div class="user-details">
-
-                <h1>Bobby Tables</h1>
                 <h3>{{ user.username }}</h3>
                 <p>email: {{ user.email }}</p>
 
             </div>
-
-            <h1>Uploaded Locations</h1>
+            </fieldset>
+            <fieldset class ="upload-location">
+            <legend>Uploaded Locations</legend>
 
             <div class="user-locations">
                 {% exec results = [] %}
@@ -39,7 +36,7 @@
                     </div>
                 {% end for %}
             </div>
-
+            </fieldset>
         </main>
 
         {% include partials/footer.html %}
