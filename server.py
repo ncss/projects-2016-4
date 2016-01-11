@@ -274,9 +274,9 @@ def location_editor(response, id):
 
 
 if __name__ == '__main__':
-    server = Server()
+    server = Server(hostname='0.0.0.0', port=8888)
     server.register(r'/', index_handler)
-    server.register(r'account/signup', signup_handler, post=signup_authentication)
+    server.register(r'/account/signup', signup_handler, post=signup_authentication)
     server.register(r'/account/login', login_handler, post=login_authentication)
     server.register(r'/location/search', search_handler)
     server.register(r'/location/(\d+)', location_handler, post=rating)
