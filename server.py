@@ -78,22 +78,21 @@ def signup_authentication(response):
     lname = response.get_field('lname')
     email = response.get_field('email')
     user = User.find(username)
-    context = {}
+    context = {'error': None }
     if user:
         context["error"] = "Username taken"
     elif not username or not password or not email:
         context["error"] = "Username, password and email are required"
     elif password != c_password:
         context["error"] = "Passwords do not match"
-    elif not re.match(r"^[0-9a-zA-Z_\.]+", username):
+    elif not re.match(r"^[0-9a-zA-Z_\.]+$", username):
         context["error"] = "Invalid username, please use only letters, numbers, underscores and periods"
     else:
         User.create(username, password, None, email, fname, lname)
         response.set_secure_cookie('username', username)
         response.redirect("/")
         return None
-    signup_page = render("register.html", context)
-    response.write(signup_page)
+    render_page('register.html', response, context)
 
 def logout_handler(response):
     response.clear_cookie("username")
