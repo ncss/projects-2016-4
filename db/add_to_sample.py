@@ -8,4 +8,7 @@ oldfile.close()
 for line in con.iterdump():
     if line.startswith('INSERT') and line not in old:
         old.append(line + '\n')
-print(''.join(old))
+
+f = open('sample.sql', 'w')
+f.write(''.join(old))
+f.close()
