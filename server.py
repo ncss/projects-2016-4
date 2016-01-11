@@ -64,11 +64,13 @@ def login_authentication(response):
     username = response.get_field('username')
     password = response.get_field('password')
     user = User.find(username)
+    context={'login error': None}
     if user and username == user.username and password == user.password:
         response.set_secure_cookie('username', username)
         response.redirect("/")
     else:
-        response.write('Incorrect username or password')
+        context['login error'] = 'Incorrect username or password'
+        render_page("login.html", response, context)
 
 def signup_authentication(response):
     username = response.get_field('username')
