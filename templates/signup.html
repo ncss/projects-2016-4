@@ -39,6 +39,11 @@
                 <label>Confirm password:</label>
                 <input type="password" placeholder="Confirm Password" name="confirm_password" required>
             </p>
+            {% if error %}
+                <p class="error">
+                    {{ error }}
+                </p>
+            {% end if %}
             <input type="submit" value="Sign Up">
         </fieldset>
     </form>
