@@ -48,10 +48,12 @@ def search_handler(response):
     context = {}
     context['query'] = "Test Search"
     results = []
-    results.append(Location("Bob's Farm", "Suspendisse potenti. In hac habitasse platea dictumst. Nullam sed maximus lorem, nec bibendum metus. Suspendisse consectetur arcu sed lacus euismod, quis maximus tortor semper. Nam eu posuere odio. Duis rhoncus urna ligula, vel hendrerit mi pellentesque non. Integer sed mauris dui. Curabitur auctor lacinia neque ut vestibulum. Donec ipsum ante, euismod vel auctor non, finibus quis odio. Vivamus venenatis aliquet arcu sit amet posuere. Ut tincidunt ante ut felis feugiat, et mollis odio efficitur.", "taj_mahal.jpg", "MaryAnn", "180 Road Way", 120, 160))
-    results.append(Location("aaaa", "A farm owned by Bob.", "taj_mahal.jpg", "MaryAnn2", "180 Road Way...", 120, 160))
-    results.append(Location("Bob's zzz", "A farm q by Bob.", "taj_mahal.jpg", "MaryAnn33", "180 Road Way???????", 120, 160))
-    context['results'] = results
+    #results.append(Location("Bob's Farm", "Suspendisse potenti. In hac habitasse platea dictumst. Nullam sed maximus lorem, nec bibendum metus. Suspendisse consectetur arcu sed lacus euismod, quis maximus tortor semper. Nam eu posuere odio. Duis rhoncus urna ligula, vel hendrerit mi pellentesque non. Integer sed mauris dui. Curabitur auctor lacinia neque ut vestibulum. Donec ipsum ante, euismod vel auctor non, finibus quis odio. Vivamus venenatis aliquet arcu sit amet posuere. Ut tincidunt ante ut felis feugiat, et mollis odio efficitur.", "taj_mahal.jpg", "MaryAnn", "180 Road Way", 120, 160))
+    #results.append(Location("aaaa", "A farm owned by Bob.", "taj_mahal.jpg", "MaryAnn2", "180 Road Way...", 120, 160))
+    #results.append(Location("Bob's zzz", "A farm q by Bob.", "taj_mahal.jpg", "MaryAnn33", "180 Road Way???????", 120, 160))
+    entry = response.get_field('search')
+    search_results = Location.search_name(entry)
+    context['results'] = search_results
     render_page('searchresult.html', response, context)
 
 def location_handler(response, id):
@@ -151,7 +153,7 @@ if __name__ == '__main__':
     server.register('/', index_handler)
     server.register("/account/signup",signup_handler, post=signup_authentication)
     server.register("/account/login", login_handler, post=login_authentication)
-    server.register("/location/search", search_handler)
+    server.register("/location/search", search_handler, post=search_handler)
     server.register(r"/location/(\d+)", location_handler)
     server.register("/location/create", create_handler, post=location_creator)
     server.register("/account/profile/([a-z0-9A-Z._]+)", user_handler)
