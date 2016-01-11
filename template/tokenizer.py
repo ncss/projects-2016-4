@@ -23,9 +23,7 @@ def tokenize(source, fname):
             line += 1
 
         # Handle token split on {{ or {% or {#
-        if prev_char == '{' and mode == TOKEN_LITERAL:
-            if char != '{' and char != '%' and char != '#':
-                raise TemplateSyntaxException('[' + fname + '] Line ' + str(line) + ': Unknown tag type: {' + char)
+        if prev_char == '{' and mode == TOKEN_LITERAL and (char == '{' or char == '%' or char == '#'):
             token_end = cur - 1  # Set end of token
             tokens.append(source[token_start:token_end])  # Add previous token
             token_start = cur - 1  # Set start of new token
