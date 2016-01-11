@@ -1,50 +1,50 @@
 from template.render import render
 from tornado.ncss import Server
-from db.db import User
+from db.db import User, Location
+import re
 
 def get_login(response):
     return response.get_secure_cookie('username')
 
 def login_check_decorator(fn):
-    def inner(response,*args, **kwargs):
-        username1 =  response.get_secure_cookie('username')
+    def inner(response, *args, **kwargs):
+        username1 = response.get_secure_cookie('username')
         if username1 is None:
             return response.redirect('/account/login')
         return fn(response, *args, **kwargs)
     return inner
 
+def render_page(filename, response, context):
+    context['logged_in'] = get_login(response)
+    if context['logged_in']:
+        user = User.find(context['logged_in'])
+        context['user'] = user
+    html = render(filename, context )
+    response.write(html)
+
 def index_handler(response):
-    logged_in = get_login(response)
-    if logged_in is not None:
-        response.write('Welcome, {}'.format(logged_in))
-    else:
-        response.write("Welcome to Placebook!")
+    render_page('index.html', response, {})
 
 def signup_handler(response):
     logged_in = get_login(response)
     if logged_in is not None:
         response.redirect('/')
     else:
-        signup_page = render("register.html",{})
-        response.write(signup_page)
+        render_page('register.html', response, {})
 
 def login_handler(response):
     logged_in = get_login(response)
     if logged_in is not None:
         response.redirect("/account/profile")
     else:
-        login_page = render("login.html",{})
-        response.write(login_page)
-        # file = open('test_login_form.html')
-        #response.write(file.read())
+        render_page('login.html', response, {})
 
 def search_handler(response):
     logged_in = get_login(response)
     response.write("Search")
 
 def location_handler(response, id):
-    logged_in = get_login(response)
-    response.write("Location {}".format(id))
+    pass
 
 @login_check_decorator
 def create_handler(response):
@@ -65,21 +65,37 @@ def login_authentication(response):
     username = response.get_field('username')
     password = response.get_field('password')
     user = User.find(username)
+    context={'login error': None}
     if user and username == user.username and password == user.password:
         response.set_secure_cookie('username', username)
         response.redirect("/")
     else:
-        response.write('Incorrect username or password')
+        context['login error'] = 'Incorrect username or password'
+        render_page("login.html", response, context)
 
 def signup_authentication(response):
     username = response.get_field('username')
     password = response.get_field('password')
+    c_password = response.get_field('confirm_password')
+    fname = response.get_field('fname')
+    lname = response.get_field('lname')
+    email = response.get_field('email')
     user = User.find(username)
-    if not user and username and password:
-        User.create(username, password, None, "james@ncss.com", None, None)
-        response.redirect("/account/login")
+    context = {'error': None }
+    if user:
+        context["error"] = "Username taken"
+    elif not username or not password or not email:
+        context["error"] = "Username, password and email are required"
+    elif password != c_password:
+        context["error"] = "Passwords do not match"
+    elif not re.match(r"^[0-9a-zA-Z_\.]+$", username):
+        context["error"] = "Invalid username, please use only letters, numbers, underscores and periods"
     else:
-        response.write('Invalid something, could not create. Better error messages coming soon. ')
+        User.create(username, password, None, email, fname, lname)
+        response.set_secure_cookie('username', username)
+        response.redirect("/")
+        return None
+    render_page('register.html', response, context)
 
 def logout_handler(response):
     response.clear_cookie("username")
@@ -87,7 +103,11 @@ def logout_handler(response):
 
 @login_check_decorator
 def location_creator(response):
-    pass
+    name = response.get_field('name')
+    description = response.get_field('description')
+    picture = response.get_field('picture')
+    address = response.get_field('address')
+
 
 if __name__ == '__main__':
     server = Server()

@@ -33,11 +33,11 @@ def build_tree(token_list, fname):
             elif t.startswith('elif '):
                 if not isinstance(current_node, IfNode):
                     raise TemplateSyntaxException('[' + fname + '] {% elif %} must follow an {% if ... %}')
-                current_node.add_elif(t[5:])
+                current_node.add_elif(t[5:], fname)
             elif t == 'else':
                 if not isinstance(current_node, IfNode):
                     raise TemplateSyntaxException('[' + fname + '] {% else %} must follow an {% if ... %}')
-                current_node.add_else()
+                current_node.add_else(fname)
             elif t == 'end if':
                 if not isinstance(current_node, IfNode):
                     raise TemplateSyntaxException('[' + fname + '] {% end if %} not expected')
