@@ -1,10 +1,15 @@
 from template.render import render
 from tornado.ncss import Server
 from db.db import User, Location
+import hashlib
 import re
 
 def get_login(response):
-    return response.get_secure_cookie('username')
+    user_name = response.get_secure_cookie('username')
+    if user_name:
+        return user_name.decode()
+    else:
+        return None
 
 def login_check_decorator(fn):
     def inner(response, *args, **kwargs):
@@ -48,7 +53,7 @@ def search_handler(response):
     context['query'] = "Test Search"
     results = []
     results.append(Location("Bob's Farm", "Suspendisse potenti. In hac habitasse platea dictumst. Nullam sed maximus lorem, nec bibendum metus. Suspendisse consectetur arcu sed lacus euismod, quis maximus tortor semper. Nam eu posuere odio. Duis rhoncus urna ligula, vel hendrerit mi pellentesque non. Integer sed mauris dui. Curabitur auctor lacinia neque ut vestibulum. Donec ipsum ante, euismod vel auctor non, finibus quis odio. Vivamus venenatis aliquet arcu sit amet posuere. Ut tincidunt ante ut felis feugiat, et mollis odio efficitur.", "taj_mahal.jpg", "MaryAnn", "180 Road Way", 120, 160))
-    results.append(Location("aaaa", "A farm owned by Bob.", "taj_mahal.jpg", "MaryAnn2", "180 Road Way...", 120, 160))
+    results.append(Location("aaaa", "Suspendisse potenti. In hac habitasse platea dictumst. Nullam sed maximus lorem, nec bibendum metus. Suspendisse consectetur arcu sed lacus euismod, quis maximus tortor semper. Nam eu posuere odio. Duis rhoncus urna ligula, vel hendrerit mi pellentesque non. Integer sed mauris dui. Curabitur auctor lacinia neque ut vestibulum. Donec ipsum ante, euismod vel auctor non, finibus quis odio. Vivamus venenatis aliquet arcu sit amet posuere. Ut tincidunt ante ut felis feugiat, et mollis odio efficitur.", "taj_mahal.jpg", "MaryAnn2", "180 Road Way...", 120, 160))
     results.append(Location("Bob's zzz", "A farm q by Bob.", "taj_mahal.jpg", "MaryAnn33", "180 Road Way???????", 120, 160))
     context['results'] = results
     render_page('searchresult.html', response, context)
@@ -67,6 +72,7 @@ def create_handler(response):
     logged_in = get_login(response)
     render_page('create_location.html', response, {})
 
+
 @login_check_decorator
 def user_handler(response, username):
     logged_in = get_login(response)
@@ -75,7 +81,8 @@ def user_handler(response, username):
 @login_check_decorator
 def profile_handler(response):
     logged_in = get_login(response)
-    response.write("username: {}".format(logged_in))
+    context = {}
+    render_page('account.html', response, context)
 
 def login_authentication(response):
     username = response.get_field('username')
@@ -113,13 +120,35 @@ def signup_authentication(response):
         return None
     render_page('signup.html', response, context)
 
+
 def logout_handler(response):
     response.clear_cookie("username")
     response.redirect("/")
 
 @login_check_decorator
 def location_creator(response):
-    pass
+    file_input = response.get_file('picture')
+    filename_hash = hashlib.sha1(file_input[2]).hexdigest()
+
+    file_output = open('./static/place-images/{}'.format(filename_hash), 'wb')
+    file_output.write(file_input[2])
+    file_output.close()
+
+    name = response.get_field('name')
+    description = response.get_field('description')
+    address = response.get_field('address')
+    username = get_login(response).decode()
+    user = User.find(username)
+
+    try:
+        lat = float(response.get_field('lat'))
+        long = float(response.get_field('long'))
+    except ValueError:
+        response.write('Invalid lat/long')
+        return
+
+    Location.create(name, description, filename_hash, user.id, address, lat, long)
+    response.write('Location successfully added')
 
 
 if __name__ == '__main__':

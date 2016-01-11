@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>Location</title>
+    {% include partials/head_meta.html %}
+    <link href="/static/css/location.css" rel="stylesheet">
+    <link href="/styleguide/css/styleguide.css" rel="stylesheet">
+    <link rel="stylesheet" href="http://cdn.leafletjs.com/leaflet/v0.7.7/leaflet.css" />
+    <script src="http://cdn.leafletjs.com/leaflet/v0.7.7/leaflet.js"></script>
+<body>
+
+{% include partials/header.html %}
+
+<main>
+        <div id="imgaddress">
+            <img src="http://sydney.edu.au/engineering/it/~ispan08/images/usyd_quad.jpg">
+            <h2>{{ location.name }}</h2>
+            <div id="star">
+                {% for i in range(5) %}
+                    &#9733;
+                {% end for %}
+            </div>
+            <div id="clear"></div>
+            <p>{{ location.address }}</p>
+        </div>
+        <div id="map"></div>
+    <div id="clear"></div>
+        <!-- <div id="map"> </div> -->
+    <div id="desc">
+        <h2>Description</h2>
+        <p>{{ location.description }} </p>
+    </div>
+
+</main>
+
+{% include partials/footer.html %}
+
+</body>
+<script>
+        var map = L.map('map').setView([{{ location.latitude }}, {{ location.longitude }}], 13);
+
+        L.tileLayer('http://{s}.tile.osm.org/{z}/{x}/{y}.png', {
+            attribution: '&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
+        }).addTo(map);
+
+        L.marker([{{ location.latitude }}, {{ location.longitude }}]).addTo(map)
+            .bindPopup('{{ location.name }}')
+            .openPopup();
+    </script>
+</html>
