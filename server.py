@@ -49,7 +49,7 @@ def search_handler(response):
     context['query'] = "Test Search"
     results = []
     results.append(Location("Bob's Farm", "Suspendisse potenti. In hac habitasse platea dictumst. Nullam sed maximus lorem, nec bibendum metus. Suspendisse consectetur arcu sed lacus euismod, quis maximus tortor semper. Nam eu posuere odio. Duis rhoncus urna ligula, vel hendrerit mi pellentesque non. Integer sed mauris dui. Curabitur auctor lacinia neque ut vestibulum. Donec ipsum ante, euismod vel auctor non, finibus quis odio. Vivamus venenatis aliquet arcu sit amet posuere. Ut tincidunt ante ut felis feugiat, et mollis odio efficitur.", "taj_mahal.jpg", "MaryAnn", "180 Road Way", 120, 160))
-    results.append(Location("aaaa", "A farm owned by Bob.", "taj_mahal.jpg", "MaryAnn2", "180 Road Way...", 120, 160))
+    results.append(Location("aaaa", "Suspendisse potenti. In hac habitasse platea dictumst. Nullam sed maximus lorem, nec bibendum metus. Suspendisse consectetur arcu sed lacus euismod, quis maximus tortor semper. Nam eu posuere odio. Duis rhoncus urna ligula, vel hendrerit mi pellentesque non. Integer sed mauris dui. Curabitur auctor lacinia neque ut vestibulum. Donec ipsum ante, euismod vel auctor non, finibus quis odio. Vivamus venenatis aliquet arcu sit amet posuere. Ut tincidunt ante ut felis feugiat, et mollis odio efficitur.", "taj_mahal.jpg", "MaryAnn2", "180 Road Way...", 120, 160))
     results.append(Location("Bob's zzz", "A farm q by Bob.", "taj_mahal.jpg", "MaryAnn33", "180 Road Way???????", 120, 160))
     context['results'] = results
     render_page('searchresult.html', response, context)
