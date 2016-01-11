@@ -3,7 +3,7 @@
  */
 function changeRate(number, locationId){
     $.ajax({
-        'url': '/location/'+locationId+'/rate',
+        'url': '/location/'+locationId,
         'data': {
             'stars': number
         },
