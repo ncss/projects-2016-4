@@ -80,7 +80,7 @@ class User:
         cur = conn.execute('''SELECT id FROM users WHERE username = ?''', (username,))
         res = cur.fetchone()
         conn.commit()
-        return User(username, password, email, res[0])
+        return User(username, password, dp, email, fname, lname, res[0])
 
     def save(self):
         conn.execute('''UPDATE users
