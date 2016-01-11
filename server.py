@@ -62,9 +62,14 @@ def search_handler(response):
     context = {}
     results = []
     entry = response.get_field('search')
-    lat = float(response.get_field('latitude'))
-    long = float(response.get_field('longitude'))
-    context['user_loc'] = [lat, long]
+    lat_field = response.get_field('latitude')
+    long_field = response.get_field('longitude')
+    if (lat_field != None and long_field != None and lat_field != '' and long_field != ''):
+        lat = float(lat_field)
+        long = float(long_field)
+        context['user_loc'] = [lat, long]
+    else:
+        context['user_loc'] = None
     tags = response.get_field('tags')
     entry = entry.strip()
     context['query'] = entry
@@ -75,7 +80,8 @@ def search_handler(response):
         search_results = Location.search_tag(tags)
     else:
         search_results = Location.search(tags, entry)
-    search_results.sort(key = lambda x: x.distance_from(lat, long))
+    if (lat_field != None and long_field != None and lat_field != '' and long_field != ''):
+        search_results.sort(key = lambda x: x.distance_from(lat, long))
     context['results'] = search_results
     render_page('searchresult.html', response, context)
 
