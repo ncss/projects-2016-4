@@ -19,7 +19,6 @@ class User:
         self.lname = lname
         self.id = id
 
-
     @staticmethod
     def find(username):
         cur = conn.execute('''
@@ -74,14 +73,18 @@ class User:
 
     @staticmethod
     def create(username, password, dp, email, fname, lname):
-        conn.execute('''INSERT INTO users (username, password, dp, email, fname, lname)
-            VALUES(?, ?, ?, ?, ?, ?)''',
-            (username, password, dp, email, fname, lname)
-        )
-        cur = conn.execute('''SELECT id FROM users WHERE username = ?''', (username,))
+        cur = conn.execute('''SELECT username, password, dp, email, fname, lname FROM users WHERE username = ? OR email = ?''', (username, email))
         res = cur.fetchone()
-        conn.commit()
-        return User(username, password, email, res[0])
+
+        if res is None:
+            conn.execute('''INSERT INTO users(username, password, dp, email, fname, lname)
+            VALUES(?, ?, ?, ?, ?, ?)''',
+            (username, password, dp, email, fname, lname))
+            conn.commit()
+            return User.find(username)
+        else:
+           return False
+
 
     def save(self):
         conn.execute('''UPDATE users
@@ -115,6 +118,7 @@ class User:
         return Tag.create_tag(name, self.id)
 
 
+
 class Location:
     def __init__(self, name, description, picture, uploader, address, longitude, latitude, id=None):
         self.name = name
@@ -127,7 +131,7 @@ class Location:
         self.id = id
 
     def __repr__(self):
-        return "Location(%s)" % self.name
+        return "Location({})".format(self.name)
 
     @staticmethod
     def create(name, description, picture, uploader, address, latitude, longitude):
@@ -136,22 +140,31 @@ class Location:
             VALUES(?, ?, ?, ?, ?, ?, ?);
         ''', (name, description, picture, uploader, address, latitude, longitude))
         conn.commit()
-        return Location(name, description, picture, uploader, address, latitude, longitude)
+        id = conn.execute('SELECT MAX(id) FROM locations').fetchone()[0]
+        return Location(name, description, picture, uploader, address, latitude, longitude, id)
 
+    @staticmethod
+    def find_user_locations(user_id):
+        cur = conn.execute('''SELECT name, description, picture, uploader, address, latitude, longitude, id FROM
+            locations WHERE uploader = ?''', (user_id,))
+        res = []
+        for row in cur:
+            res.append(Location(*row))
+        return res
 
-    def change_location(self, address, longitude, latitude):
+    def change_location(self, name, description, picture, address, latitude, longitude):
         conn.execute('''
             UPDATE locations
             SET address = ?, longitude = ?, latitude = ?
-            WHERE id = ?;''', (address, longitude, latitude, self.id))
+            WHERE id = ?;''', (name, description, picture, address, latitude, longitude, self.id))
         conn.commit()
 
     @staticmethod
     def find_id(id):
         cur = conn.execute('''
-            SELECT name, description, picture, uploader, address, longitude, latitude FROM locations
-             WHERE id = ?
-             ''', (id,))
+            SELECT name, description, picture, uploader, address, longitude, latitude, id FROM locations
+            WHERE id = ?
+            ''', (id,))
         res = cur.fetchone()
         if res:
             return Location(*res)
@@ -166,9 +179,10 @@ class Location:
         if res:
             location = Location(*res)
             return location
+
     @staticmethod
     def findall():
-        cur = conn.execute('SELECT name, description, picture, uploader, address, longitude, latitude FROM locations')
+        cur = conn.execute('SELECT name, description, picture, uploader, address, longitude, latitude, id FROM locations')
         res = []
         for row in cur:
             res.append(Location(*row))
@@ -201,9 +215,17 @@ class Location:
     def search_tag(tag_name):
         cur = conn.execute('''
           SELECT l.name, description, picture, uploader, address, longitude, latitude, l.id FROM locations l
-          JOIN  tags t ON l.id = t.place
+          JOIN tags t ON l.id = t.place
           WHERE t.name = ?
           ''', (tag_name,))
+        return [Location(*row) for row in cur.fetchall()]
+
+    @staticmethod
+    def search_address(address):
+        cur = conn.execute('''
+          SELECT name, description, picture, uploader, address, longitude, latitude, id FROM locations
+          WHERE address LIKE '%' || ? || '%'
+          ''', (address,))
         return [Location(*row) for row in cur.fetchall()]
 
     def get_tags(self):
@@ -212,13 +234,30 @@ class Location:
     def add_tag(self, name):
         return Tag.create_tag(name, self.id)
 
+    @property
+    def avg_rating(self):
+        cur = conn.execute('''
+          SELECT score FROM ratings WHERE place = ?
+        ''', (self.id,))
+
+        res = cur.fetchall()
+
+        total = 0
+        for i in res:
+            total += i[0]
+
+        if total != 0:
+            average = total/len(res)
+            return average
+
+
 class Tag:
     def __init__(self, name, place):
         self.name = name
         self.place = place
 
     def __repr__(self):
-        return 'Tag("%s")' % self.name
+        return 'Tag("{}")'.format(self.name)
 
     @staticmethod
     def create_tag(name, place):
@@ -259,10 +298,8 @@ class Tag:
           ''', (place, name))
         conn.commit()
 
-
     def delete(self):
         return Tag.delete_tag(self.name, self.place)
-
 
 
 class Rating:
@@ -305,5 +342,33 @@ class Rating:
             return Rating(*res)
 
 
+class Comment:
+    def __init__(self, author, comment, place, id=None):
+        self.author = author
+        self.comment = comment
+        self.place = place
+        self.id = id
 
+    @staticmethod
+    def create(author, comment, place):
+        conn.execute('''INSERT INTO comments(author, comment, place)
+            VALUES(?, ?, ?);''', (author, comment, place))
+        conn.commit()
+        id = conn.execute('SELECT MAX(id) FROM locations').fetchone()[0]
+        return Comment(author, comment, place, id=id)
 
+    @staticmethod
+    def find_author(author):
+        res = []
+        cur = conn.execute('SELECT * FROM comments WHERE author=?', (author,))
+        for row in cur.fetchall():
+            res.append(Comment(*row))
+        return res
+
+    @staticmethod
+    def find_place(place):
+        res = []
+        cur = conn.execute('SELECT * FROM comments WHERE place=?', (place,))
+        for row in cur.fetchall():
+            res.append(Comment(*row))
+        return res

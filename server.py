@@ -1,6 +1,6 @@
 from template.render import render
 from tornado.ncss import Server
-from db.db import User, Location, Rating
+from db.db import User, Location, Rating, Tag
 import hashlib
 import re
 
@@ -56,6 +56,9 @@ def search_handler(response):
     context = {}
     results = []
     entry = response.get_field('search')
+    if entry is None:
+        response.redirect('/')
+        return
     entry = entry.strip()
     context['query'] = entry
     if entry == '':
@@ -75,16 +78,20 @@ def location_handler(response, id):
         error_handler(response)
 
 
-
 def error_handler(response):
     response.set_status(404)
-    #add in error page
-    render_page('generic-template.html', response, {})
+    render_page('404.html', response, {})
 
 @login_check_decorator
 def create_handler(response):
     context = {'error': None}
     render_page('create_location.html', response, context)
+
+def comment_handler(response):
+    pass
+
+def comment(response):
+    comment = "This is a comment"
 
 
 @login_check_decorator
@@ -94,6 +101,9 @@ def user_handler(response, username):
 @login_check_decorator
 def profile_handler(response):
     context = {}
+    user_object = User.find(get_login(response))
+    user_locations = Location.find_user_locations(user_object.id)
+    context['results'] = user_locations
     render_page('account.html', response, context)
 
 def login_authentication(response):
@@ -171,6 +181,12 @@ def location_creator(response):
     else:
         Location.create(name, description, filename_hash, user.id, address, lat, long)
         response.redirect("/location/{}".format(Location.find_name(name).id))
+
+        tags = response.get_field('tags').split(',')
+        if tags == ['']:
+            tags = []
+        for tag in tags:
+            Tag.create_tag(tag, location.find_name(name).id)
     return
 
 
@@ -181,6 +197,7 @@ if __name__ == '__main__':
     server.register("/account/login", login_handler, post=login_authentication)
     server.register("/location/search", search_handler)
     server.register(r"/location/(\d+)", location_handler, post=rating)
+    server.register('/comment', comment_handler, post=comment)
     server.register("/location/create", create_handler, post=location_creator)
     server.register("/account/profile/([a-z0-9A-Z._]+)", user_handler)
     server.register("/account/profile", profile_handler)

@@ -1,29 +1,47 @@
 <!DOCTYPE html>
 <html>
-<head>
-    <meta charset="utf-8">
-    <title>Register for Placebook</title>
-    {% include partials/head_meta.html %}
-    <link href="/static/css/login.css" rel="stylesheet">
-</head>
-<body>
+    <head>
+        <meta charset="utf-8">
+        <title>User Account</title>
+        {% include partials/head_meta.html %}
+        <link href="/static/css/login.css" rel="stylesheet">
+        <link href="/static/css/account.css" rel="stylesheet">
+        <link href="/static/css/searchresult.css" rel="stylesheet">
 
-{% include partials/header.html %}
+    </head>
+    <body>
 
-<main>
+        {% include partials/header.html %}
 
-    <h1>Your Account</h1>
+        <main class="login-form">
 
-    <div class="login-form">
+            <fieldset>
+                <legend>Bobby Tables</legend>
+                <div class="user-details">
+                    <h3>{{ user.username }}</h3>
+                    <p>email: {{ user.email }}</p>
+                </div>
+            </fieldset>
 
-        <h1>{{ user.username }}</h1>
-        <p>email: {{ user.email }}</p>
+            <div class ="upload-location searchresults">
+                <h1>Uploaded Locations</h1>
+                    {% for result in results %}
+                        <div class="result">
+                            <div id="img">
+                                <a href="/location/{{ result.id }}"><img src = "/static/place-images/{{result.picture}}"></a>
+                            </div>
+                            <div>
+                                <a href="/location/{{ result.id }}"><h3> {{result.name}}</h3></a>
+                                {{result.description}}
+                            </div>
+                        </div>
+                    {% end for %}
+                </div>
+            </div>
 
-    </div>
+        </main>
 
-</main>
+        {% include partials/footer.html %}
 
-{% include partials/footer.html %}
-
-</body>
+    </body>
 </html>

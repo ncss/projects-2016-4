@@ -6,10 +6,6 @@
     {% include partials/head_meta.html %}
     <style>
 
-        body {
-            background-color: #009f6a;
-        }
-
         main {
             display: inline-block;
             position: relative;
@@ -37,6 +33,29 @@
             padding: 10px 30px;
         }
 
+        @media screen and (max-width: 1164px) {
+            #jumbotron {
+                font-size: 1.1rem;
+            }
+        }
+        @media screen and (max-width: 945px) {
+            #jumbotron {
+                font-size: 0.9rem;
+            }
+        }
+
+         @media screen and (max-width: 818px) {
+            #jumbotron {
+                font-size: 0.7rem;
+            }
+        }
+
+        @media screen and (max-width: 885px) {
+            #jumbotron {
+                font-size: 0.7rem;
+            }
+        }
+
         .site-footer {
             padding-top: 0;
         }
@@ -49,16 +68,15 @@
 
 
 <main>
-    <img src="/static/images/hero.png" class="hero">
+    <img src="/static/images/hero.png" class="hero" alt="Hero image">
 
     <div id="jumbotron">
-        <h1>Placebook</h1>
+        <h1>Welcome to Placebook{% if logged_in %},
+            {%  if user.fname %} {{ user.fname }}{% else %}{{  user.username }}{% end if %}
+        {%  end if %}</h1>
         <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Asperiores atque autem
             deleniti doloremqu lectus metus euismod id amet praesent. Laoreet amet adipiscing
-            gravida condimentum rhoncus, interdum sed ligula fusce id vel, luctus id sed massa
-            aliquam, nisl vitae, non massa cursus. Lobortis tempus vitae tenetur ante, vehicula
-            accumsan nullam imperdiet, etiam diam est a est, pretium consequat sagittis, omnis
-            at nunc est. Aliquam mauris. </p>
+            gravida condimentum rhoncus.</p>
     </div>
 
 </main>
