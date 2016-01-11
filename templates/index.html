@@ -71,9 +71,7 @@
     <img src="/static/images/hero.png" class="hero" alt="Hero image">
 
     <div id="jumbotron">
-        <h1>Welcome to Placebook{% if logged_in %},
-            {%  if user.fname %} {{ user.fname }}{% else %}{{  user.username }}{% end if %}
-        {%  end if %}</h1>
+        <h1>Welcome to Placebook{% if logged_in %}, {{ user.full_name }}{% end if %}</h1>
         <p>For unique, exquisite locations. For colours filled in the emptiness of small landmarks. Placebook will find you your next attraction, whether
         it's a outstanding bakery or an adrenaline adventure. We place the hidden beauty from cities so you can experience them.</p>
         <p> We are Placebook.</p>
