@@ -9,7 +9,7 @@ class ExprNode(Node):
         self.expression = expression
 
     def eval(self, context):
-        return html.escape(str(eval(self.expression, context)))
+        return html.escape(str(eval(self.expression, {}, context)))
 
     def pprint(self):
         return 'ExprNode({})'.format(self.expression)

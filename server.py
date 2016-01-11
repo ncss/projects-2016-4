@@ -27,10 +27,11 @@ def index_handler(response):
 
 def signup_handler(response):
     logged_in = get_login(response)
+    context = {'error':None}
     if logged_in is not None:
         response.redirect('/')
     else:
-        render_page('register.html', response, {})
+        render_page('signup.html', response, context)
 
 def login_handler(response):
     logged_in = get_login(response)
@@ -101,7 +102,7 @@ def signup_authentication(response):
         response.set_secure_cookie('username', username)
         response.redirect("/")
         return None
-    render_page('register.html', response, context)
+    render_page('signup.html', response, context)
 
 def logout_handler(response):
     response.clear_cookie("username")
