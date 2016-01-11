@@ -36,10 +36,11 @@ def signup_handler(response):
 
 def login_handler(response):
     logged_in = get_login(response)
+    context = {'login_error': None}
     if logged_in is not None:
         response.redirect("/account/profile")
     else:
-        render_page('login.html', response, {})
+        render_page('login.html', response, context)
 
 def search_handler(response):
     logged_in = get_login(response)
@@ -73,12 +74,12 @@ def login_authentication(response):
     username = response.get_field('username')
     password = response.get_field('password')
     user = User.find(username)
-    context={'login error': None}
+    context = {'login_error': None}
     if user and username == user.username and password == user.password:
         response.set_secure_cookie('username', username)
         response.redirect("/")
     else:
-        context['login error'] = 'Incorrect username or password'
+        context['login_error'] = 'Incorrect username or password'
         render_page("login.html", response, context)
 
 def signup_authentication(response):
