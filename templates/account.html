@@ -16,18 +16,19 @@
         <main class="login-form">
 
             <fieldset>
-                <legend>Bobby Tables</legend>
+                <legend><span class="fa fa-user"></span>&nbsp;{{ user.full_name }}</legend>
                 <div class="user-details">
                     <h3>{{ user.username }}</h3>
                     <p>email: {{ user.email }}</p>
                 </div>
             </fieldset>
 
-            <div class ="upload-location searchresults">
+            <div class="upload-location searchresults">
                 <h1>Uploaded Locations</h1>
+                {% if results %}
                     {% for result in results %}
                         <div class="result">
-                            <div id="img">
+                            <div class="img">
                                 <a href="/location/{{ result.id }}"><img src = "/static/place-images/{{result.picture}}"></a>
                             </div>
                             <div>
@@ -36,7 +37,9 @@
                             </div>
                         </div>
                     {% end for %}
-                </div>
+                {% else %}
+                    <p>You have not created any locations. <br> <a href="../location/create">Create Location</a></p>
+                {% end if %}
             </div>
 
         </main>

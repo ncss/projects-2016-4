@@ -13,7 +13,7 @@
 <main>
     <form enctype="multipart/form-data" class="location-form" method="post">
         <fieldset>
-            <legend>Create New Location</legend>
+            <legend><span class="fa fa-plus-circle"></span>&nbsp;Create New Location</legend>
             {% if error %}
                 <p class="error">
                     {{ error }}
@@ -26,7 +26,7 @@
             </p>
             <p>
                 <label>Description:</label>
-                <textarea cols="55" rows="7" placeholder="Description" name="description" required></textarea>
+                <textarea cols="55" rows="7" placeholder="Description" name="description" maxlength="200" required></textarea>
             </p>
             <p>
                 <label>Picture:</label>

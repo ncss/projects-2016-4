@@ -6,13 +6,25 @@
             <input type="text" placeholder="Search&hellip;" name="search" value="{% if query %}{{ query }}{% end if %}"><button type="submit"><span class="fa fa-search"></span></button>
         </form>
         <nav class="header-links">
-            {% if logged_in %}
-                <a href="/location/create">Create Location</a>
-                <a href="/account/logout">Logout</a>
-            {% else %}
-               <a href="/account/login">Login</a>
-               <a href="/account/signup">Sign Up</a>
-            {% end if %}
+            <ul>
+                {% if logged_in %}
+
+                <li><a href="/location/create"><span class="fa fa-plus-circle"></span>&nbsp;Create Location</a></li>
+                <li>
+                    <a><span class="fa fa-chevron-circle-down"></span>&nbsp;Account</a>
+                    <ul>
+                        <li><a href="/account/profile"><span class="fa fa-user"></span>&nbsp;Profile</a></li>
+                        <li><a href="/account/logout"><span class="fa fa-sign-out"></span>&nbsp;Sign Out</a></li>
+                    </ul>
+                </li>
+
+                {% else %}
+
+                <li><a href="/account/login"><span class="fa fa-sign-in"></span>&nbsp;Login</a></li>
+                <li><a href="/account/signup"><span class="fa fa-user-plus"></span>&nbsp;Sign Up</a></li>
+
+                {% end if %}
+            </ul>
         </nav>
     </div>
 </header>

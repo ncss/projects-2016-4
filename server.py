@@ -32,8 +32,12 @@ def render_page(filename, response, context):
 def index_handler(response):
     render_page('index.html', response, {})
 
-def rating(response, stars):
-    Rating.create(Location.id,stars, User.id)
+def rating(response, location_id):
+    if get_login(response):
+        user_object = User.find(get_login(response))
+        Rating.create(location_id, response.get_field('stars'), user_object.id)
+
+
 
 def signup_handler(response):
     logged_in = get_login(response)
@@ -196,7 +200,7 @@ def location_creator(response):
         if tags == ['']:
             tags = []
         for tag in tags:
-            Tag.create_tag(tag, location.find_name(name).id)
+            Tag.create_tag(tag, Location.find_name(name).id)
     return
 
 @login_check_decorator
