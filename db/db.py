@@ -386,6 +386,7 @@ class Comment:
         self.place = place
         self.id = id
 
+
     @staticmethod
     def create(author, comment, place):
         conn.execute('''INSERT INTO comments(author, comment, place)
@@ -409,3 +410,19 @@ class Comment:
         for row in cur.fetchall():
             res.append(Comment(*row))
         return res
+
+    @staticmethod
+    def get_author_comment(user_id):
+        cur = conn.execute('''
+          SELECT username FROM users u
+          JOIN comments c ON c.author = u.id
+          WHERE u.id =?
+        ''', (user_id,))
+
+        res = cur.fetchone()
+        if res:
+            return res[0]
+
+
+
+
