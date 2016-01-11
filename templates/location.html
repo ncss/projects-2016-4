@@ -21,12 +21,15 @@
                 <img src="/static/place-images/{{ location.picture }}">
             </div>
             <h2>{{ location.name }}</h2>
-            {% if logged_in and location.uploader == user.id %}
-             <a href="edit_location.html">Edit</a>
-            {% end if %}
             <div id="star">
                 {% for i in range(5,0,-1) %}
-                    {% if location.avg_rating is None %}
+                    {% if logged_in and 1 is not None %}
+                        {% if i <= round(1) %}
+                            <div id="star{{i}}" class="goldstar" {% if logged_in %} onclick="changeRate( {{ i }} , {{ location.id }} )" {% end if %}><i class="fa fa-star"></i></div>
+                        {% else %}
+                            <div id="star{{i}}" class="blackstar" {% if logged_in %} onclick="changeRate( {{ i }} , {{ location.id }} )" {% end if %}><i class="fa fa-star"></i></div>
+                        {% end if %}
+                    {% elif location.avg_rating is None %}
                         <div id="star{{i}}" class="silverstar" {% if logged_in %} onclick="changeRate( {{ i }} , {{ location.id }} )" {% end if %}><i class="fa fa-star"></i></div>
                     {% elif i <= round(location.avg_rating) %}
                         <div id="star{{i}}" class="goldstar" {% if logged_in %} onclick="changeRate( {{ i }} , {{ location.id }} )" {% end if %}><i class="fa fa-star"></i></div>
@@ -34,6 +37,9 @@
                         <div id="star{{i}}" class="blackstar" {% if logged_in %} onclick="changeRate( {{ i }} , {{ location.id }} )" {% end if %}><i class="fa fa-star"></i></div>
                     {% end if %}
                 {% end for %}
+                {% if logged_in and location.uploader == user.id %}
+                    <a id="edit" href="edit/{{ location.id }}">Edit</a>
+                {% end if %}
             </div>
             {% if not logged_in %}
             <br />
