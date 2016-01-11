@@ -70,7 +70,7 @@ def search_handler(response):
 
 def location_handler(response, id):
     location = Location.find_id(id)
-    context = {}
+    context = {'rating': Location.avg_rating}
     if location:
         context['location'] = location
         render_page('location.html', response, context)
@@ -82,12 +82,18 @@ def location_handler(response, id):
 def error_handler(response):
     response.set_status(404)
     #add in error page
-    render_page('generic-template.html', response, {})
+    render_page('404.html', response, {})
 
 @login_check_decorator
 def create_handler(response):
     context = {'error': None}
     render_page('create_location.html', response, context)
+
+def comment_handler(response):
+    pass
+
+def comment(response):
+    comment = "This is a comment"
 
 
 @login_check_decorator
@@ -184,6 +190,7 @@ if __name__ == '__main__':
     server.register("/account/login", login_handler, post=login_authentication)
     server.register("/location/search", search_handler)
     server.register(r"/location/(\d+)", location_handler, post=rating)
+    server.register('/comment', comment_handler, post=comment)
     server.register("/location/create", create_handler, post=location_creator)
     server.register("/account/profile/([a-z0-9A-Z._]+)", user_handler)
     server.register("/account/profile", profile_handler)
