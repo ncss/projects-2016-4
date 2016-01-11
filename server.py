@@ -164,12 +164,14 @@ def location_creator(response):
     except ValueError:
         context['error'] = 'Invalid latitude or longitude'
         render_page('create_location.html', response, context)
+        return
     if Location.find_name(name):
         context['error'] = 'Place already exists'
         render_page('create_location.html', response, context)
     else:
         Location.create(name, description, filename_hash, user.id, address, lat, long)
         response.redirect("/location/{}".format(Location.find_name(name).id))
+    return
 
 
 if __name__ == '__main__':
