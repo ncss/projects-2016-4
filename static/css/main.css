@@ -102,8 +102,6 @@ main img {
   position: relative;
   padding: 15px 20px;
   cursor: pointer;
-  -webkit-transition: all 0.2s;
-  -moz-transition: all 0.2s;
   transition: all 0.2s;
 }
 
@@ -116,8 +114,6 @@ main img {
   display: none;
   opacity: 0;
   visibility: hidden;
-  -webkit-transition: opacity 0.2s;
-  -moz-transition: opacity 0.2s;
   transition: opacity 0.2s;
 }
 
