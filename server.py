@@ -6,37 +6,35 @@ def get_login(response):
     return response.get_secure_cookie('username')
 
 def login_check_decorator(fn):
-    def inner(response,*args, **kwargs):
-        username1 =  response.get_secure_cookie('username')
+    def inner(response, *args, **kwargs):
+        username1 = response.get_secure_cookie('username')
         if username1 is None:
             return response.redirect('/account/login')
         return fn(response, *args, **kwargs)
     return inner
 
+def render_page(filename, response, context):
+    context['logged_in'] = get_login(response)
+
+    html = render(filename, context )
+    response.write(html)
+
 def index_handler(response):
-    logged_in = get_login(response)
-    if logged_in is not None:
-        response.write('Welcome, {}'.format(logged_in))
-    else:
-        response.write("Welcome to Placebook!")
+    render_page('index.html', response, {})
 
 def signup_handler(response):
     logged_in = get_login(response)
     if logged_in is not None:
         response.redirect('/')
     else:
-        signup_page = render("register.html",{})
-        response.write(signup_page)
+        render_page('register.html', response, {})
 
 def login_handler(response):
     logged_in = get_login(response)
     if logged_in is not None:
         response.redirect("/account/profile")
     else:
-        login_page = render("login.html",{})
-        response.write(login_page)
-        # file = open('test_login_form.html')
-        #response.write(file.read())
+        render_page('login.html', response, {})
 
 def search_handler(response):
     logged_in = get_login(response)
