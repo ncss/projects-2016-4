@@ -169,7 +169,7 @@ class Location:
         conn.execute('''
             UPDATE locations
             SET name = ?, description = ?, picture = ?, address = ?, latitude = ?, longitude = ?
-            WHERE id = ?;''', (name, description, picture, address, latitude, longitude, self.id))
+            WHERE id = ?;''', (name, description, picture, address, latitude, longitude, id))
         conn.commit()
 
     @staticmethod
