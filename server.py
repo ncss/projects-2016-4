@@ -1,6 +1,6 @@
 from template.render import render
 from tornado.ncss import Server
-from db.db import User
+from db.db import User, Location
 import re
 
 def get_login(response):
@@ -16,7 +16,9 @@ def login_check_decorator(fn):
 
 def render_page(filename, response, context):
     context['logged_in'] = get_login(response)
-
+    if context['logged_in']:
+        user = User.find(context['logged_in'])
+        context['user'] = user
     html = render(filename, context )
     response.write(html)
 
@@ -42,8 +44,7 @@ def search_handler(response):
     response.write("Search")
 
 def location_handler(response, id):
-    logged_in = get_login(response)
-    response.write("Location {}".format(id))
+    pass
 
 @login_check_decorator
 def create_handler(response):
@@ -64,11 +65,13 @@ def login_authentication(response):
     username = response.get_field('username')
     password = response.get_field('password')
     user = User.find(username)
+    context={'login error': None}
     if user and username == user.username and password == user.password:
         response.set_secure_cookie('username', username)
         response.redirect("/")
     else:
-        response.write('Incorrect username or password')
+        context['login error'] = 'Incorrect username or password'
+        render_page("login.html", response, context)
 
 def signup_authentication(response):
     username = response.get_field('username')
@@ -78,22 +81,21 @@ def signup_authentication(response):
     lname = response.get_field('lname')
     email = response.get_field('email')
     user = User.find(username)
-    context = {}
+    context = {'error': None }
     if user:
         context["error"] = "Username taken"
     elif not username or not password or not email:
         context["error"] = "Username, password and email are required"
     elif password != c_password:
         context["error"] = "Passwords do not match"
-    elif not re.match(r"^[0-9a-zA-Z_\.]+", username):
+    elif not re.match(r"^[0-9a-zA-Z_\.]+$", username):
         context["error"] = "Invalid username, please use only letters, numbers, underscores and periods"
     else:
         User.create(username, password, None, email, fname, lname)
         response.set_secure_cookie('username', username)
         response.redirect("/")
         return None
-    signup_page = render("register.html", context)
-    response.write(signup_page)
+    render_page('register.html', response, context)
 
 def logout_handler(response):
     response.clear_cookie("username")
@@ -101,7 +103,11 @@ def logout_handler(response):
 
 @login_check_decorator
 def location_creator(response):
-    pass
+    name = response.get_field('name')
+    description = response.get_field('description')
+    picture = response.get_field('picture')
+    address = response.get_field('address')
+
 
 if __name__ == '__main__':
     server = Server()
