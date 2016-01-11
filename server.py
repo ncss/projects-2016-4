@@ -78,10 +78,8 @@ def location_handler(response, id):
         error_handler(response)
 
 
-
 def error_handler(response):
     response.set_status(404)
-    #add in error page
     render_page('404.html', response, {})
 
 @login_check_decorator
