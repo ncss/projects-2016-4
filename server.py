@@ -26,6 +26,8 @@ def render_page(filename, response, context):
         context['user'] = user
     if 'query' not in context:
         context['query'] = None
+    if 'tags' not in context:
+        context['tags'] = None
     html = render(filename, context )
     response.write(html)
 
@@ -65,7 +67,7 @@ def search_handler(response):
     tags = response.get_field('tags')
     entry = entry.strip()
     context['query'] = entry
-    context['tags']=tags
+    context['tags']= tags
     if tags == '':
         search_results = Location.search_name(entry)
     elif entry == '':

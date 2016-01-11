@@ -1,10 +1,20 @@
+<script>
+    function validateForm() {
+        searches = document.getElementsByName("search");
+        tags = document.getElementsByName("tags");
+
+        if ((searches[0].value == "") && (tags[0].value == "")) {
+            return false
+        }
+    }
+</script>
 
 <header class="site-header">
     <div class="container">
         <h1 class="site-logo"><a href="/"><span class="fa-map-signs fa"></span> Placebook</a></h1>
-        <form class="header-search" method="get" action="/location/search">
+        <form class="header-search" method="get" action="/location/search" onsubmit="return validateForm()">
             <input type="text" placeholder="Search&hellip;" name="search"
-                   value="{% if query %}{{ query }}{% end if %}"><input type="text" placeholder="Tags" name="tags"><button type="submit"><span class="fa fa-search"></span></button>
+                   value="{% if query %}{{ query }}{% end if %}"><input type="text" placeholder="Tags" name="tags" value="{% if tags %}{{ tags }}{% end if %}"><button type="submit"><span class="fa fa-search"></span></button>
             <input type="hidden" id="latitude" name="latitude">
             <input type="hidden" id="longitude" name="longitude">
         </form>
