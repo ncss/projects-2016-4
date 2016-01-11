@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>Sign Up for Placebook</title>
+    {% include partials/head_meta.html %}
+    <link href="/static/css/login.css" rel="stylesheet">
+</head>
+<body>
+
+{% include partials/header.html %}
+
+<main>
+
+    <form action="/account/signup" class="login-form" method="post">
+        <fieldset>
+            <legend>Sign Up</legend>
+            <p>
+                <label>Username:</label>
+                <input type="text" placeholder="Username" name="username" required>
+            </p>
+            <p>
+                <label>Email:</label>
+                <input type="email" placeholder="Email" name="email" required>
+            </p>
+            <p>
+                <label>First name:</label>
+                <input type="text" placeholder="First Name" name="fname">
+            </p>
+            <p>
+                <label>Last name: </label>
+                <input type="text" placeholder="Last Name" name="lname">
+            </p>
+            <p>
+                <label>Password:</label>
+                <input type="password" placeholder="Password" name="password" required>
+            </p>
+            <p>
+                <label>Confirm password:</label>
+                <input type="password" placeholder="Confirm Password" name="confirm_password" required>
+            </p>
+            <input type="submit" value="Sign Up">
+        </fieldset>
+    </form>
+
+</main>
+
+{% include partials/footer.html %}
+
+</body>
+</html>
