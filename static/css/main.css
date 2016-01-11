@@ -83,3 +83,18 @@ main img {
 	width: 100%;
 }
 
+@media screen and (max-width: 900px) {
+
+	.site-header .container {
+		flex-flow: column;
+	}
+
+	.site-logo {
+		margin-bottom: 0;
+	}
+
+	.site-header .container {
+		padding-bottom: 30px;
+	}
+
+}
