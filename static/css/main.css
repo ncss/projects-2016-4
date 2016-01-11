@@ -37,13 +37,22 @@ main img {
 	margin-bottom: 20px;
 }
 
-.header-search input[type=text] {
-	width: 400px;
+.header-search [name=search] {
+	width: 300px;
 	border-radius: 6px 0 0 6px;
+}
+
+.header-search [name=tags] {
+	width: 100px;
+	border-radius: 0;
+}
+
+.header-search input[type=text] {
 	height: 50px;
 	padding: 15px;
  	border: 1px solid #ddd;
 }
+
 
 .header-search input,
 .header-search button,
