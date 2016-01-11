@@ -63,7 +63,12 @@ def location_handler(response, id):
         context['location'] = location
         render_page('location.html', response, context)
     else:
-        response.set_status(404)
+        error_handler(response)
+
+def error_handler(response):
+    response.set_status(404)
+    #add in error page
+    render_page('generic-template.html', response, {})
 
 @login_check_decorator
 def create_handler(response):
@@ -163,4 +168,5 @@ if __name__ == '__main__':
     server.register("/account/profile/([a-z0-9A-Z._]+)", user_handler)
     server.register("/account/profile", profile_handler)
     server.register("/account/logout", logout_handler)
+    server.register("/.*", error_handler)
     server.run()
