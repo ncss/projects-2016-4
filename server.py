@@ -200,7 +200,7 @@ def location_creator(response):
         if tags == ['']:
             tags = []
         for tag in tags:
-            Tag.create_tag(tag, location.find_name(name).id)
+            Tag.create_tag(tag, Location.find_name(name).id)
     return
 
 @login_check_decorator
