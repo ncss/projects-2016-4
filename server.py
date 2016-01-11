@@ -207,6 +207,10 @@ def logout_handler(response):
     response.redirect('/')
 
 
+def comment_handler():
+    pass
+
+
 @login_check_decorator
 def location_creator(response):
     file_input = response.get_file('picture')
@@ -276,7 +280,7 @@ if __name__ == '__main__':
     server.register(r'/account/login', login_handler, post=login_authentication)
     server.register(r'/location/search', search_handler)
     server.register(r'/location/(\d+)', location_handler, post=rating)
-    server.register(r'/location/(\d+)/comment', post=comment_post)
+    server.register(r'/location/(\d+)/comment', comment_handler, post=comment_post)
     server.register(r'/location/create', create_handler, post=location_creator)
     server.register(r'/location/edit/(\d+)', edit_handler, post=location_editor)
     server.register(r'/account/profile/([a-z0-9A-Z._]+)', profile_handler)
