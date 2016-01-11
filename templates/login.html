@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>Login to Placebook</title>
+    {% include partials/head_meta.html %}
+    <link href="/static/css/login.css" rel="stylesheet">
+</head>
+<body>
+
+{% include partials/header.html %}
+
+<main>
+
+    <form action="/account/login" class="login-form" method="post">
+        <fieldset>
+            <legend><span class="fa fa-sign-in"></span>&nbsp;Login</legend>
+            {% if login_error %}
+                <p class="error">
+                    {{ login_error }}
+                </p>
+            {% end if %}
+            <p>
+                <label>Username:</label>
+                <input type="text" placeholder="Username" name="username">
+            </p>
+            <p>
+                <label>Password:</label>
+                <input type="password" placeholder="Password" name="password">
+            </p>
+            <input type="submit" value="Login">
+        </fieldset>
+    </form>
+
+</main>
+
+{% include partials/footer.html %}
+
+</body>
+</html>

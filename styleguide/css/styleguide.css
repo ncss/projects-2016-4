@@ -1,0 +1,123 @@
+@import "normalize.css";
+
+* {box-sizing: border-box}
+
+html {
+	font-size: 14px;
+	font-family: Duru Sans, sans-serif;
+}
+
+body {
+	font-size: 1rem;
+	padding: 20px;
+    font-weight: 400;
+}
+
+p {
+    margin-top: 10px;
+    margin-bottom: 10px;
+    line-height: 16px;
+}
+h1, h2, h3, h4, h5, h6 {
+    margin-top: 1.5rem;
+    margin-bottom: 0.7rem;
+    color: rgba(39, 39, 39, 0.87);
+    font-weight: bold;
+}
+
+h1 {
+	font-size: 1.8rem;
+}
+
+h2 {
+    font-size: 1.7rem;
+}
+
+h3 {
+    font-size: 1.6rem;
+}
+
+h4 {
+    font-size: 1.45rem;
+}
+
+h5 {
+    font-size: 1.35rem;
+}
+
+h6 {
+    font-size: 1.25rem;
+}
+
+a {
+	color: #009f6a;
+    text-decoration: none;
+}
+a:hover {
+    color: #004f35;
+    text-decoration: none;
+}
+
+.form-group {
+    margin: 10px;
+}
+
+input[type=submit], button {
+	background-color: #009f6a;
+	color: white;
+	border-radius: 6px;
+	border: 3px solid #009f6a;
+	padding: 5px 10px;
+    width: 150px;
+}
+input[type=submit]:hover, button:hover{
+    background-color: #00b97b;
+    border-color: #00b97b;
+}
+
+dl {
+  width: 300px;
+  overflow: hidden;
+  padding: 0;
+  margin: 20px 0;
+
+}
+dt {
+  float: left;
+  width: 30%;
+  padding: 0;
+  margin:5px 0;
+  font-weight: bold;
+}
+dd {
+  float: left;
+  width: 70%;
+  padding: 0;
+  margin:5px 0;
+}
+
+input[type="radio"] {
+    margin: 5px;
+}
+
+
+input[type="checkbox"] {
+
+}
+
+ul {
+    list-style-type: disc;
+    list-style-position: inside;
+}
+
+ul, ol {
+    margin: 10px 0;
+}
+ul > li, ol > li {
+    margin: 5px 0;
+}
+
+ol {
+    list-style-type: decimal;
+    list-style-position: inside;
+}

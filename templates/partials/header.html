@@ -1,0 +1,66 @@
+<script>
+    function validateForm() {
+        searches = document.getElementsByName("search");
+        tags = document.getElementsByName("tags");
+
+        if ((searches[0].value == "") && (tags[0].value == "")) {
+            return false
+        }
+    }
+</script>
+
+<header class="site-header">
+    <div class="container">
+        <h1 class="site-logo"><a href="/"><span class="fa-map-signs fa"></span> Placebook</a></h1>
+        <form class="header-search" method="get" action="/location/search" onsubmit="return validateForm()">
+            <input type="text" placeholder="Search&hellip;" name="search"
+                   value="{% if query %}{{ query }}{% end if %}"><input type="text" placeholder="Tags" name="tags" value="{% if tags %}{{ tags }}{% end if %}"><button type="submit"><span class="fa fa-search"></span></button>
+            <input type="hidden" id="latitude" name="latitude">
+            <input type="hidden" id="longitude" name="longitude">
+        </form>
+        <nav class="header-links">
+            <ul>
+                {% if logged_in %}
+
+                <li><a href="/location/create"><span class="fa fa-plus-circle"></span>&nbsp;Create Location</a></li>
+                <li>
+                    <a><span class="fa fa-chevron-circle-down"></span>&nbsp;{{user.full_name}}</a>
+                    <ul>
+                        <li><a href="/account/profile"><span class="fa fa-user"></span>&nbsp;Profile</a></li>
+                        <li><a href="/account/logout"><span class="fa fa-sign-out"></span>&nbsp;Sign Out</a></li>
+                    </ul>
+                </li>
+
+                {% else %}
+
+                <li><a href="/account/login"><span class="fa fa-sign-in"></span>&nbsp;Login</a></li>
+                <li><a href="/account/signup"><span class="fa fa-user-plus"></span>&nbsp;Sign Up</a></li>
+
+                {% end if %}
+            </ul>
+        </nav>
+    </div>
+</header>
+
+<script type="application/javascript">
+    var lat = 0;
+    var long = 0;
+    lat_input = document.getElementById("latitude");
+    long_input = document.getElementById("longitude");
+    function getLocation() {
+        console.log("getLocation call")
+        if (navigator.geolocation) {
+            navigator.geolocation.getCurrentPosition(positionCallback);
+        } else {
+            console.log("geolocation unavailable")
+        }
+    }
+    function positionCallback(position) {
+        console.log("positionCallback call")
+        lat =  position.coords.latitude;
+        long = position.coords.longitude;
+        lat_input.value = ""+lat
+        long_input.value = ""+long
+     }
+    getLocation();
+</script>

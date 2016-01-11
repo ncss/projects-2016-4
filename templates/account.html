@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <title>User Account</title>
+        {% include partials/head_meta.html %}
+        <link href="/static/css/login.css" rel="stylesheet">
+        <link href="/static/css/account.css" rel="stylesheet">
+        <link href="/static/css/searchresult.css" rel="stylesheet">
+
+    </head>
+    <body>
+
+        {% include partials/header.html %}
+
+        <main class="login-form">
+
+            <fieldset>
+                <legend><span class="fa fa-user"></span>&nbsp;{{ user.full_name }}</legend>
+                <div class="user-details">
+                    <h3>{{ user.username }}</h3>
+                    <p>email: {{ user.email }}</p>
+                </div>
+            </fieldset>
+
+            <div class="upload-location searchresults">
+                <h1>Uploaded Locations</h1>
+                {% if results %}
+                    {% for result in results %}
+                        <div class="result">
+                            <div class="img">
+                                <a href="/location/{{ result.id }}"><img src = "/static/place-images/{{result.picture}}"></a>
+                            </div>
+                            <div>
+                                <a href="/location/{{ result.id }}"><h3> {{result.name}}</h3></a>
+                                {{result.description}}
+                            </div>
+                        </div>
+                    {% end for %}
+                {% else %}
+                    <p>You have not created any locations. <br> <a href="../location/create">Create Location</a></p>
+                {% end if %}
+            </div>
+
+        </main>
+
+        {% include partials/footer.html %}
+
+    </body>
+</html>

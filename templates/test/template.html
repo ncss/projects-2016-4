@@ -1,0 +1,10 @@
+<html>
+    {% include test/header.html %}
+    <h1>Name is {{ name }}</h1>
+    <p>x = {{ x }}</p>
+    {% for msg in messages %}
+        {% include test/inner.html %}
+    {% end for %}
+    {% include test/footer.html %}
+    {# this comment is ignored #}
+</html>

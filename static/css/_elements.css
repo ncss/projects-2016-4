@@ -1,0 +1,70 @@
+
+html {
+    font-size: 14px;
+}
+
+body {
+	font-size: 1rem;
+	font-family: Duru Sans, sans-serif;
+}
+
+
+h1, h2, h3, h4 {
+
+}
+
+h1 {
+	font-size: 1.5rem;
+}
+
+a {
+	color: #009f6a;
+    text-decoration: none;
+}
+
+a:hover, a:focus {
+    color: #004f35;
+}
+
+textarea {
+    padding: 15px;
+}
+
+fieldset {
+    display: flex;
+    flex-flow: column;
+    justify-content: center;
+    margin: 0 auto;
+    max-width: 350px;
+    border: 1px solid #eee;
+    padding: 15px 30px;
+}
+
+label {
+    display: none;
+}
+
+legend {
+    font-weight: bold;
+	font-size: 1.8rem;
+}
+
+input[type=submit], button {
+	color: white;
+	border-radius: 6px;
+    background-color: #004f35;
+    border: 1px solid #004f35;
+	box-shadow: inset 0 1px 0 #009f6a;
+}
+
+input, button {
+    display: block;
+    padding: 15px;
+    margin: 20px 0;
+    width: 100%;
+}
+
+input[type=submit]:hover, button:hover{
+	border: 1px solid #bbb;
+	background-color: #009f6a;
+}

@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>Search Results for Placebook</title>
+    {% include partials/head_meta.html %}
+      <link href="/static/css/searchresult.css" rel="stylesheet">
+</head>
+<body>
+
+{% include partials/header.html %}
+
+<main>
+    {% if len(results) == 0 %}
+        {% if query %}
+            <h1>No results for {{ query }}</h1>
+        {% elif tags %}
+            <h1>No results for {{ tags }}</h1>
+        {% end if %}
+    {% else %}
+        {% if query %}
+            <h1>Search results for {{ query }}</h1>
+        {% elif tags %}
+            <h1>Search results for {{ tags }}</h1>
+        {% end if %}
+
+
+    <div class = "searchresults">
+        {% for result in results %}
+        <div class="result">
+            <div id="img{{ result.id }}">
+                <a href="/location/{{ result.id }}"><img src = "/static/place-images/{{result.picture}}"></a>
+            </div>
+
+            <div class="text">
+    	        <a href="/location/{{ result.id }}"><h3> {{result.name}}</h3></a><b>{% if user_loc %}{{ round(result.distance_from(user_loc[0], user_loc[1]), 2) }}km{% end if %}</b>
+                {{result.description}}
+            </div>
+        </div>
+        {% end for %}
+    </div>
+    {% end if %}
+</main>
+
+{% include partials/footer.html %}
+
+</body>
+</html>

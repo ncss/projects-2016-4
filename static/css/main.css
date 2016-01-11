@@ -1,0 +1,158 @@
+@import 'normalize.css';
+@import '_elements.css';
+
+*, *::before, *::after {
+	box-sizing: border-box;
+}
+
+body {
+	margin-bottom: 100px;
+}
+
+.site-logo {
+	font-size: 45px;
+	color: #fff;
+	display: inline-block;
+	font-family: Overlock, cursive;
+}
+
+.container, main {
+	max-width: 1200px;
+	margin: 0 auto;
+}
+
+main img {
+	max-width: 100%;
+}
+
+.site-header, .site-footer {
+	background-color: #009f6a;
+}
+
+.site-footer p:last-of-type {
+	margin-bottom: 0;
+}
+
+.site-header .container {
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+	padding: 0 20px;
+	margin-bottom: 20px;
+}
+
+.header-search [name=search] {
+	width: 300px;
+	border-radius: 6px 0 0 6px;
+}
+
+.header-search [name=tags] {
+	width: 100px;
+	border-radius: 0;
+}
+
+.header-search input[type=text] {
+	height: 50px;
+	padding: 15px;
+ 	border: 1px solid #ddd;
+}
+
+
+.header-search input,
+.header-search button,
+.site-header a {
+	display: inline-block;
+}
+
+.header-search button[type=submit] {
+	height: 50px;
+	width: 50px;
+	border-radius: 0 6px 6px 0;
+}
+
+.header-links a {
+	font-family: Overlock, sans-serif;
+	font-size: 1.4rem;
+}
+
+.header-links a:hover {
+	color: #004f35;
+}
+
+.header-links .fa {
+  vertical-align: baseline;
+}
+
+.site-header a {
+	color: #fff;
+}
+
+.site-header ul {
+	text-align: left;
+	display: inline;
+	margin: 0;
+	padding: 15px 4px 17px 0;
+	list-style: none;
+	background-color: #009f6a;
+}
+
+.site-header ul li {
+  display: inline-block;
+  margin-right: -4px;
+  position: relative;
+  padding: 15px 20px;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.site-header ul li ul {
+  padding: 0;
+  position: absolute;
+  top: 48px;
+  left: 0;
+  width: 180px;
+  display: none;
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.2s;
+}
+
+.site-header ul li ul li {
+	display: block;
+	text-align: left;
+}
+
+.site-header ul li:hover ul {
+	display: block;
+	opacity: 1;
+	visibility: visible;
+	z-index: 5;
+}
+
+.site-footer {
+	padding-top: 30px;
+	text-align: center;
+	color: #fff;
+	font-size: small;
+	letter-spacing: 1px;
+	padding-bottom: 2em;
+	position: fixed;
+	bottom: 0;
+	width: 100%;
+}
+
+@media screen and (max-width: 970px) {
+
+	.site-header .container {
+		flex-flow: column;
+	}
+
+	.site-logo {
+		margin-bottom: 0;
+	}
+
+	.site-header .container {
+		padding-bottom: 30px;
+	}
+
+}
