@@ -74,14 +74,17 @@ class User:
 
     @staticmethod
     def create(username, password, dp, email, fname, lname):
-        conn.execute('''INSERT INTO users (username, password, dp, email, fname, lname)
-            VALUES(?, ?, ?, ?, ?, ?)''',
-            (username, password, dp, email, fname, lname)
-        )
-        cur = conn.execute('''SELECT id FROM users WHERE username = ?''', (username,))
+        cur = conn.execute('''SELECT username, password, dp, email, fname, lname FROM users WHERE username = ? OR email = ?''', (username, email))
         res = cur.fetchone()
-        conn.commit()
-        return User(username, password, dp, email, fname, lname, res[0])
+        if res is None:
+            conn.execute('''INSERT INTO users(username, password, dp, email, fname, lname)
+            VALUES(?, ?, ?, ?, ?, ?)''',
+            (username, password, dp, email, fname, lname))
+            conn.commit()
+            return User.find(username)
+        else:
+           return False
+
 
     def save(self):
         conn.execute('''UPDATE users
@@ -113,6 +116,7 @@ class User:
 
     def add_tag(self, name):
         return Tag.create_tag(name, self.id)
+
 
 
 class Location:
