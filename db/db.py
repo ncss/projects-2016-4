@@ -27,6 +27,18 @@ class User:
             return User(*res)
 
     @staticmethod
+    def get_email(email):
+        cur = conn.execute('''
+          SELECT email
+          FROM users
+          WHERE email = ?
+        ''', (email,))
+        res = cur.fetchone()
+        if res:
+            return email
+        return('no')
+
+    @staticmethod
     def findall():
         cur = conn.execute('SELECT username, password, email, id FROM users')
         res = []
@@ -79,6 +91,25 @@ class User:
         conn.execute('DELETE FROM users WHERE username = ?', (username,))
         conn.commit()
 
+    @staticmethod
+    def all_locations():
+        pass
+
+    @staticmethod
+    def search_tag(tag_name):
+        cur = conn.execute('''
+          SELECT l.name, description, picture, uploader, address, longitude, latitude, l.id FROM locations l
+          JOIN  tags t ON l.id = t.place
+          WHERE t.name = ?
+          ''', (tag_name,))
+        return [Location(*row) for row in cur.fetchall()]
+
+    def get_tags(self):
+        return Tag.find_from_place(self.id)
+
+    def add_tag(self, name):
+        return Tag.create_tag(name, self.id)
+
 
 class Location:
     def __init__(self, name, description, picture, uploader, address, longitude, latitude, id=None):
@@ -102,6 +133,7 @@ class Location:
         ''', (name, description, picture, uploader, address, latitude, longitude))
         conn.commit()
         return Location(name, description, picture, uploader, address, latitude, longitude)
+
 
     def change_location(self, address, longitude, latitude):
         conn.execute('''
