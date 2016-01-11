@@ -147,7 +147,7 @@ def location_creator(response):
         return
 
     Location.create(name, description, filename_hash, user.id, address, lat, long)
-    response.write('Location successfully added')
+    response.redirect("/location/{}".format(Location.find_name(name).id))
 
 
 if __name__ == '__main__':
