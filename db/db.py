@@ -81,7 +81,7 @@ class User:
         cur = conn.execute('''SELECT id FROM users WHERE username = ?''', (username,))
         res = cur.fetchone()
         conn.commit()
-        return User(username, password, email, res[0])
+        return User(username, password, dp, email, fname, lname, res[0])
 
     def save(self):
         conn.execute('''UPDATE users
@@ -212,6 +212,22 @@ class Location:
     def add_tag(self, name):
         return Tag.create_tag(name, self.id)
 
+    @property
+    def avg_rating(self):
+        cur = conn.execute('''
+          SELECT score FROM ratings WHERE place = ?
+        ''', (self.id,))
+
+        res = cur.fetchall()
+
+        total = 0
+        for i in res:
+            total += i[0]
+
+        if total != 0:
+            average = total/len(res)
+            return average
+
 class Tag:
     def __init__(self, name, place):
         self.name = name
@@ -304,6 +320,6 @@ class Rating:
         if res:
             return Rating(*res)
 
-
-
-
+if __name__ == '__main__':
+    unsw = Location.find_name('UNSW')
+    unsw.avg_rating
