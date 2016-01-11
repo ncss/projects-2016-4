@@ -7,11 +7,11 @@
         </form>
         <nav class="header-links">
             {% if logged_in %}
-                <a href="/location/create">Create Location</a>
-                <a href="/account/logout">Logout</a>
+                <a href="/location/create"><span class="fa fa-plus-circle"></span>&nbsp;Create Location</a>
+                <a href="/account/logout"><span class="fa fa-sign-out"></span>&nbsp;Logout</a>
             {% else %}
-               <a href="/account/login">Login</a>
-               <a href="/account/signup">Sign Up</a>
+               <a href="/account/login"><span class="fa fa-sign-in"></span>&nbsp;Login</a>
+               <a href="/account/signup"><span class="fa fa-user-plus"></span>&nbsp;Sign Up</a>
             {% end if %}
         </nav>
     </div>

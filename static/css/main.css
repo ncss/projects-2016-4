@@ -67,6 +67,10 @@ main img {
 	color: #004f35;
 }
 
+.header-links .fa {
+  vertical-align: baseline;
+}
+
 .site-header a {
 	color: #fff;
 }
@@ -83,7 +87,7 @@ main img {
 	width: 100%;
 }
 
-@media screen and (max-width: 900px) {
+@media screen and (max-width: 970px) {
 
 	.site-header .container {
 		flex-flow: column;
