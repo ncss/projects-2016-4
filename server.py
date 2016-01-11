@@ -75,9 +75,13 @@ def search_handler(response):
     render_page('searchresult.html', response, context)
 
 def location_handler(response, id):
+    logged_in = get_login(response)
+    context = {}
+    user_object = User.find(get_login(response))
     location = Location.find_id(id)
-    stars = Location.get_user_rating(, location)
-    context = {'user_rating': stars}
+    if logged_in:
+        stars = Location.get_user_rating(user_object, location)
+        context['user_rating': stars]
     if location:
         context['location'] = location
         render_page('location.html', response, context)
