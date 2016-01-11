@@ -71,7 +71,8 @@ def search_handler(response):
     else:
         context['user_loc'] = None
     tags = response.get_field('tags')
-    entry = entry.strip()
+    if entry:
+        entry = entry.strip()
     context['query'] = entry
     context['tags'] = tags
     if tags == '':
