@@ -75,6 +75,51 @@ main img {
 	color: #fff;
 }
 
+.site-header ul {
+	text-align: left;
+	display: inline;
+	margin: 0;
+	padding: 15px 4px 17px 0;
+	list-style: none;
+	background-color: #009f6a;
+}
+
+.site-header ul li {
+  display: inline-block;
+  margin-right: -4px;
+  position: relative;
+  padding: 15px 20px;
+  cursor: pointer;
+  -webkit-transition: all 0.2s;
+  -moz-transition: all 0.2s;
+  transition: all 0.2s;
+}
+
+.site-header ul li ul {
+  padding: 0;
+  position: absolute;
+  top: 48px;
+  left: 0;
+  width: 150px;
+  display: none;
+  opacity: 0;
+  visibility: hidden;
+  -webkit-transition: opacity 0.2s;
+  -moz-transition: opacity 0.2s;
+  transition: opacity 0.2s;
+}
+
+.site-header ul li ul li {
+  display: block;
+	text-align: left;
+}
+
+.site-header ul li:hover ul {
+	display: block;
+	opacity: 1;
+	visibility: visible;
+}
+
 .site-footer {
 	padding-top: 30px;
 	text-align: center;
