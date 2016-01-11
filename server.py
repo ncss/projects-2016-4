@@ -56,6 +56,9 @@ def search_handler(response):
     context = {}
     results = []
     entry = response.get_field('search')
+    if entry is None:
+        response.redirect('/')
+        return
     entry = entry.strip()
     context['query'] = entry
     if entry == '':
