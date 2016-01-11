@@ -274,11 +274,11 @@ class Location:
             average = total/len(res)
             return average
 
-    def get_user_rating(self, place):
+    def get_user_rating(self, user):
         cur = conn.execute('''
           SELECT score FROM ratings r
           WHERE user = ? AND place = ?
-        ''', (place, self.id))
+        ''', (user, self.id))
 
         res = cur.fetchone()
         if res:
