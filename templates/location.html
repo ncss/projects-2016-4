@@ -26,7 +26,9 @@
             {% end if %}
             <div id="star">
                 {% for i in range(5,0,-1) %}
-                    {% if i <= round(location.avg_rating) %}
+                    {% if location.avg_rating is None %}
+                        <div id="star{{i}}" class="silverstar" {% if logged_in %} onclick="changeRate( {{ i }} , {{ location.id }} )" {% end if %}><i class="fa fa-star"></i></div>
+                    {% elif i <= round(location.avg_rating) %}
                         <div id="star{{i}}" class="goldstar" {% if logged_in %} onclick="changeRate( {{ i }} , {{ location.id }} )" {% end if %}><i class="fa fa-star"></i></div>
                     {% else %}
                         <div id="star{{i}}" class="blackstar" {% if logged_in %} onclick="changeRate( {{ i }} , {{ location.id }} )" {% end if %}><i class="fa fa-star"></i></div>

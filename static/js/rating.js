@@ -20,9 +20,11 @@ function updateStars(number){
         if (parseInt(this.id.substr(4)) <= number) {
             $(this).addClass("goldstar");
             $(this).removeClass("blackstar");
+            $(this).removeClass("silverstar");
         } else {
             $(this).addClass("blackstar");
             $(this).removeClass("goldstar");
+            $(this).removeClass("silverstar");
         }
     });
 }
