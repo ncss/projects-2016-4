@@ -19,7 +19,10 @@ INSERT INTO locations(name, description, picture, uploader, address, latitude, l
   VALUES('UNSW', 'Trash', 'sample text', 1, 'nowhere', -33.91, 151.2);
 
 INSERT INTO locations(name, description, picture, uploader, address, latitude, longitude)
-  VALUES('The Womens" College', 'Cool place', 'sample text', 2, 'USyd', -33.89, 151.2);
+  VALUES('The Womens College', 'Cool place', 'sample text', 2, 'USyd', -33.89, 151.2);
+
+INSERT INTO locations(name, description, picture, uploader, address, latitude, longitude)
+  VALUES('The mens College', 'Cool place', 'sample text', 5, 'USyd', -33.89, 151.2);
 
 -- Sample tags
 INSERT INTO tags(name, place)

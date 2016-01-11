@@ -85,6 +85,9 @@ class Location:
         self.longitude = longitude
         self.id = id
 
+    def __repr__(self):
+        return "Location(%s)" % self.name
+
     @staticmethod
     def create(name, description, picture, uploader, address, longitude, latitude):
         conn.execute('''
@@ -113,12 +116,13 @@ class Location:
     def find_name(name):
         cur = conn.execute('''
             SELECT name, description, picture, uploader, address, longitude, latitude, id FROM locations
-             WHERE name = ?
+             WHERE name =  ?
              ''', (name,))
         res = cur.fetchone()
         if res:
             location = Location(*res)
             return location
+
 
     @staticmethod
     def findall():
@@ -138,6 +142,17 @@ class Location:
             WHERE id = ?
         ''', (self.name, self.description, self.picture, self.uploader, self.address, self.longitude, self.latitude, self.id))
 
+    @staticmethod
+    def search_name(name):
+        cur = conn.execute('''
+            SELECT name, description, picture, uploader, address, longitude, latitude, id FROM locations
+             WHERE name LIKE  '%' || ? || '%'
+             ''', (name,))
+        res = []
+        for i in cur.fetchall():
+            res.append(Location(*i))
+        return res
+
 
 class Tag:
     def __init__(self, name, place):
@@ -145,7 +160,31 @@ class Tag:
         self.place = place
 
     @staticmethod
-    def create(name, place):
+    def create_tag(name, place):
         conn.execute('''INSERT INTO tags(name, place)
-            VALUES(?, ?)''', (name, place))
+            VALUES(?, ?);''', (name, place))
+        return Tag(name, place)
+
+    @staticmethod
+    def change_tag(name):
+        conn.execute('''
+            UPDATE tags
+            SET name = ?
+            WHERE place = ?;''', (name, place))
+
+    @staticmethod
+    def find_tag(name):
+        cur = conn.execute('''
+          SELECT * FROM tags
+          WHERE name = ?
+        ''', (name,))
+
+    @staticmethod
+    def delete_tag(id):
+        conn.execute('''
+          DELETE FROM tags
+          WHERE place = ?
+          ''', (place,))
+
+
 

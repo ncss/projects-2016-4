@@ -24,7 +24,11 @@
                 <label>Password:</label>
                 <input type="password" placeholder="Password" name="password">
             </p>
-
+            {% if login_error %}
+                <p class="error">
+                    {{ login_error }}
+                </p>
+            {% end if %}
             <input type="submit" value="Login">
         </fieldset>
     </form>
