@@ -15,7 +15,11 @@
     <form action="/account/login" class="login-form" method="post">
         <fieldset>
             <legend>Login</legend>
-
+            {% if login_error %}
+                <p class="error">
+                    {{ login_error }}
+                </p>
+            {% end if %}
             <p>
                 <label>Username:</label>
                 <input type="text" placeholder="Username" name="username">
@@ -24,7 +28,6 @@
                 <label>Password:</label>
                 <input type="password" placeholder="Password" name="password">
             </p>
-
             <input type="submit" value="Login">
         </fieldset>
     </form>

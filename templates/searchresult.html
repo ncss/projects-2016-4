@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>Search Results for Placebook</title>
+    {% include partials/head_meta.html %}
+      <link href="/static/css/searchresult.css" rel="stylesheet">
+</head>
+<body>
+
+{% include partials/header.html %}
+
+<main>
+
+    <h1>Search Results for {{query}}</h1>
+
+    <div class = "searchresults ">
+    {% for result in results %}
+    <div class = "result">
+        <img src = "/static/images/{{result.picture}}">
+        <div>
+        <h3> {{result.name}}</h3>
+        {{result.description}}
+        </div>
+    </div>
+    {% end for %}
+    </div>
+</main>
+
+{% include partials/footer.html %}
+
+</body>
+</html>

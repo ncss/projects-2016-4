@@ -1,0 +1,33 @@
+#map {
+    height: 400px;
+    width: 60%;
+    float: right;
+}
+
+#imgaddress {
+    width: 37%;
+    height: 200px;
+    float: left;
+}
+
+#imgaddress > img {
+    width: 100%;
+}
+#imgaddress > h2 {
+    float: left;
+    width: 80%;
+    margin-top: 15px;
+}
+
+#desc {
+    width: 100%;
+}
+
+#clear {
+    clear: both;
+}
+#star {
+    float: right;
+    margin-top: 15px;
+    color: #ffa300;
+}

@@ -1,10 +1,15 @@
 from template.render import render
 from tornado.ncss import Server
 from db.db import User, Location
+import hashlib
 import re
 
 def get_login(response):
-    return response.get_secure_cookie('username')
+    user_name = response.get_secure_cookie('username')
+    if user_name:
+        return user_name.decode()
+    else:
+        return None
 
 def login_check_decorator(fn):
     def inner(response, *args, **kwargs):
@@ -36,14 +41,21 @@ def signup_handler(response):
 
 def login_handler(response):
     logged_in = get_login(response)
+    context = {'login_error': None}
     if logged_in is not None:
         response.redirect("/account/profile")
     else:
-        render_page('login.html', response, {})
+        render_page('login.html', response, context)
 
 def search_handler(response):
     logged_in = get_login(response)
-    response.write("Search")
+    context = {}
+    results = []
+    entry = response.get_field('search')
+    context['query'] = entry
+    search_results = Location.search_name(entry)
+    context['results'] = search_results
+    render_page('searchresult.html', response, context)
 
 def location_handler(response, id):
     location = Location.find_id(id)
@@ -59,6 +71,7 @@ def create_handler(response):
     logged_in = get_login(response)
     render_page('create_location.html', response, {})
 
+
 @login_check_decorator
 def user_handler(response, username):
     logged_in = get_login(response)
@@ -67,18 +80,19 @@ def user_handler(response, username):
 @login_check_decorator
 def profile_handler(response):
     logged_in = get_login(response)
-    response.write("username: {}".format(logged_in))
+    context = {}
+    render_page('account.html', response, context)
 
 def login_authentication(response):
     username = response.get_field('username')
     password = response.get_field('password')
     user = User.find(username)
-    context={'login error': None}
+    context = {'login_error': None}
     if user and username == user.username and password == user.password:
         response.set_secure_cookie('username', username)
         response.redirect("/")
     else:
-        context['login error'] = 'Incorrect username or password'
+        context['login_error'] = 'Incorrect username or password'
         render_page("login.html", response, context)
 
 def signup_authentication(response):
@@ -105,13 +119,35 @@ def signup_authentication(response):
         return None
     render_page('signup.html', response, context)
 
+
 def logout_handler(response):
     response.clear_cookie("username")
     response.redirect("/")
 
 @login_check_decorator
 def location_creator(response):
-    pass
+    file_input = response.get_file('picture')
+    filename_hash = hashlib.sha1(file_input[2]).hexdigest()
+
+    file_output = open('./static/place-images/{}'.format(filename_hash), 'wb')
+    file_output.write(file_input[2])
+    file_output.close()
+
+    name = response.get_field('name')
+    description = response.get_field('description')
+    address = response.get_field('address')
+    username = get_login(response)
+    user = User.find(username)
+
+    try:
+        lat = float(response.get_field('lat'))
+        long = float(response.get_field('long'))
+    except ValueError:
+        response.write('Invalid lat/long')
+        return
+
+    Location.create(name, description, filename_hash, user.id, address, lat, long)
+    response.write('Location successfully added')
 
 
 if __name__ == '__main__':
@@ -119,7 +155,7 @@ if __name__ == '__main__':
     server.register('/', index_handler)
     server.register("/account/signup",signup_handler, post=signup_authentication)
     server.register("/account/login", login_handler, post=login_authentication)
-    server.register("/location/search", search_handler)
+    server.register("/location/search", search_handler, post=search_handler)
     server.register(r"/location/(\d+)", location_handler)
     server.register("/location/create", create_handler, post=location_creator)
     server.register("/account/profile/([a-z0-9A-Z._]+)", user_handler)
