@@ -11,10 +11,12 @@
 {% include partials/header.html %}
 
 <main>
+    {% if len(results) == 0 %}
+    <h1>No results for {{query}}</h1>
+    {% else %}
+    <h1>Search results for {{query}}</h1>
 
-    <h1>Search Results for {{query}}</h1>
-
-    <div class = "searchresults ">
+    <div class = "searchresults">
     {% for result in results %}
     <div class = "result">
         <div id="img">
@@ -24,9 +26,9 @@
 	    <a href="/location/{{ result.id }}"><h3> {{result.name}}</h3></a>
         {{result.description}}
         </div>
+        {% end for %}
     </div>
-    {% end for %}
-    </div>
+    {% end if %}
 </main>
 
 {% include partials/footer.html %}

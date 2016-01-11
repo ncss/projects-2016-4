@@ -52,7 +52,9 @@
     <img src="/static/images/hero.png" class="hero">
 
     <div id="jumbotron">
-        <h1>Placebook</h1>
+        <h1>Welcome to Placebook{% if logged_in %},
+            {%  if user.fname %} {{ user.fname }}{% else %}{{  user.username }}{% end if %}
+        {%  end if %}</h1>
         <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Asperiores atque autem
             deleniti doloremqu lectus metus euismod id amet praesent. Laoreet amet adipiscing
             gravida condimentum rhoncus, interdum sed ligula fusce id vel, luctus id sed massa
