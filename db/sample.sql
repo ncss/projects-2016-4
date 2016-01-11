@@ -43,3 +43,10 @@ INSERT INTO ratings(place, score, user)
 
 INSERT INTO ratings(place, score, user)
   VALUES(2, 1, 1);
+
+-- Sample comments
+INSERT INTO comments(author, comment, place)
+  VALUES(1, 'Its like there are only two people here', 2);
+
+INSERT INTO comments(author, comment, place)
+  VALUES(4, 'Where is the green sheep?', 1);
