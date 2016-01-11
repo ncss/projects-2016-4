@@ -37,9 +37,6 @@
                         <div id="star{{i}}" class="blackstar" {% if logged_in %} onclick="changeRate( {{ i }} , {{ location.id }} )" {% end if %}><i class="fa fa-star"></i></div>
                     {% end if %}
                 {% end for %}
-                {% if logged_in and location.uploader == user.id %}
-                    <a id="edit" href="edit/{{ location.id }}">Edit</a>
-                {% end if %}
             </div>
             {% if not logged_in %}
             <br />
@@ -56,6 +53,9 @@
         <h3>Description</h3>
         <p>{{ location.description }} </p>
     </div>
+    {% if logged_in and location.uploader == user.id %}
+        <a id="edit" href="edit/{{ location.id }}">Edit</a>
+    {% end if %}
 
 </main>
 
