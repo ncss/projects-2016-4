@@ -1,37 +1,40 @@
 <!DOCTYPE html>
 <html>
-<head>
-    <meta charset="utf-8">
-    <title>Search Results for Placebook</title>
-    {% include partials/head_meta.html %}
-      <link href="/static/css/searchresult.css" rel="stylesheet">
-</head>
-<body>
+    <head>
+        <meta charset="utf-8">
+        <title>Search Results for Placebook</title>
+        {% include partials/head_meta.html %}
+        <link href="/static/css/searchresult.css" rel="stylesheet">
+    </head>
 
-{% include partials/header.html %}
+    <body>
 
-<main>
-    {% if len(results) == 0 %}
-    <h1>No results for {{query}}</h1>
-    {% else %}
-    <h1>Search results for {{query}}</h1>
+        {% include partials/header.html %}
 
-    <div class = "searchresults">
-    {% for result in results %}
-    <div class = "result">
-        <div id="img">
-        <a href="/location/{{ result.id }}"><img src = "/static/place-images/{{result.picture}}"></a>
-        </div>
-        <div>
-	    <a href="/location/{{ result.id }}"><h3> {{result.name}}</h3></a>
-        {{result.description}}
-        </div>
-        {% end for %}
-    </div>
-    {% end if %}
-</main>
+        <main>
+            {% if len(results) == 0 %}
+                <h1>No results for {{query}}</h1>
+            {% else %}
+                <h1>Search results for {{query}}</h1>
 
-{% include partials/footer.html %}
+                <div class = "searchresults">
+                {% for result in results %}
+                    <div class = "result">
+                        <div class="img">
+                            <a href="/location/{{ result.id }}"><img src = "/static/place-images/{{result.picture}}"></a>
+                        </div>
 
-</body>
+                        <div>
+                            <a href="/location/{{ result.id }}"><h3> {{result.name}}</h3></a>
+                            {{result.description}}
+                        </div>
+                    </div>
+                {% end for %}
+                </div>
+            {% end if %}
+        </main>
+
+        {% include partials/footer.html %}
+
+    </body>
 </html>

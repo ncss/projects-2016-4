@@ -2,12 +2,14 @@
 <html>
 <head>
     <meta charset="utf-8">
-    <title>Location</title>
+    <title>{{ location.name }}</title>
     {% include partials/head_meta.html %}
     <link href="/static/css/location.css" rel="stylesheet">
     <link href="/styleguide/css/styleguide.css" rel="stylesheet">
     <link rel="stylesheet" href="http://cdn.leafletjs.com/leaflet/v0.7.7/leaflet.css" />
     <script src="http://cdn.leafletjs.com/leaflet/v0.7.7/leaflet.js"></script>
+    <script src="http://code.jquery.com/jquery-latest.min.js" type="text/javascript"></script>
+    <script src="/static/js/rating.js"></script>
 </head>
 <body>
 
@@ -19,15 +21,25 @@
                 <img src="/static/place-images/{{ location.picture }}">
             </div>
             <h2>{{ location.name }}</h2>
+            {% if location.uploader == user.id %}
+             <a href="edit_location.html">Edit</a>
+            {% end if %}
             <div id="star">
-                {% for i in range(5) %}
-                    {% if i >= 2 %}
-                        <div id="goldstar" class="{{i}}">&#9733;</div>
+                {% for i in range(5,0,-1) %}
+                    {% if location.avg_rating is None %}
+                        <div id="star{{i}}" class="silverstar" {% if logged_in %} onclick="changeRate( {{ i }} , {{ location.id }} )" {% end if %}><i class="fa fa-star"></i></div>
+                    {% elif i <= round(location.avg_rating) %}
+                        <div id="star{{i}}" class="goldstar" {% if logged_in %} onclick="changeRate( {{ i }} , {{ location.id }} )" {% end if %}><i class="fa fa-star"></i></div>
                     {% else %}
-                        <div id="blackstar" class="{{i}}">&#9733;</div>
+                        <div id="star{{i}}" class="blackstar" {% if logged_in %} onclick="changeRate( {{ i }} , {{ location.id }} )" {% end if %}><i class="fa fa-star"></i></div>
                     {% end if %}
                 {% end for %}
             </div>
+            {% if not logged_in %}
+            <br />
+            <br />
+                <p id="lograte">Log in to rate</p>
+            {% end if %}
             <div id="clear"></div>
             <p>{{ location.address }}</p>
         </div>

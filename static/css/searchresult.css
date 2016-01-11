@@ -30,7 +30,7 @@ main h1{
 }
 
 
-#img > img {
+.img > img {
     width: 100%;
     overflow: hidden;
     height: 200px;
