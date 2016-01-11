@@ -155,7 +155,7 @@ if __name__ == '__main__':
     server.register('/', index_handler)
     server.register("/account/signup",signup_handler, post=signup_authentication)
     server.register("/account/login", login_handler, post=login_authentication)
-    server.register("/location/search", search_handler, post=search_handler)
+    server.register("/location/search", search_handler)
     server.register(r"/location/(\d+)", location_handler)
     server.register("/location/create", create_handler, post=location_creator)
     server.register("/account/profile/([a-z0-9A-Z._]+)", user_handler)

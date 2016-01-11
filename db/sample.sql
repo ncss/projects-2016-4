@@ -13,16 +13,16 @@ INSERT INTO users(username, password, dp, email, fname, lname)
 
 -- Sample locations
 INSERT INTO locations(name, description, picture, uploader, address, latitude, longitude)
-  VALUES('SIT', 'School of Information Technologies', 'sample text', 1, 'USyd', -33.89, 151.2);
+  VALUES('SIT', 'School of Information Technologies', 'sit.jpg', 1, 'USyd', -33.89, 151.2);
 
 INSERT INTO locations(name, description, picture, uploader, address, latitude, longitude)
-  VALUES('UNSW', 'Trash', 'sample text', 1, 'nowhere', -33.91, 151.2);
+  VALUES('UNSW', 'Trash', 'unsw.jpg', 1, 'nowhere', -33.91, 151.2);
 
 INSERT INTO locations(name, description, picture, uploader, address, latitude, longitude)
-  VALUES('The Womens College', 'Cool place', 'sample text', 2, 'USyd', -33.89, 151.2);
+  VALUES('The Womens College', 'Cool place', 'womens_college.jpg', 2, 'USyd', -33.89, 151.2);
 
 INSERT INTO locations(name, description, picture, uploader, address, latitude, longitude)
-  VALUES('The mens College', 'Cool place', 'sample text', 5, 'USyd', -33.89, 151.2);
+  VALUES('The mens College', 'Cool place', 'womens_college.jpg', 5, 'USyd', -33.89, 151.2);
 
 -- Sample tags
 INSERT INTO tags(name, place)
