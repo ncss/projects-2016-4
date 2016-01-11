@@ -19,7 +19,6 @@ class User:
         self.lname = lname
         self.id = id
 
-
     @staticmethod
     def find(username):
         cur = conn.execute('''
@@ -138,6 +137,14 @@ class Location:
         conn.commit()
         return Location(name, description, picture, uploader, address, latitude, longitude)
 
+    @staticmethod
+    def find_user_locations(user_id):
+        cur = conn.execute('''SELECT name, description, picture, uploader, address, latitude, longitude, id FROM
+            locations WHERE uploader = ?''', (user_id,))
+        res = []
+        for row in cur:
+            res.append(Location(*row))
+        return res
 
     def change_location(self, address, longitude, latitude):
         conn.execute('''
