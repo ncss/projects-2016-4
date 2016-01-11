@@ -24,7 +24,7 @@
             </div>
 
             <div class="text">
-    	        <a href="/location/{{ result.id }}"><h3> {{result.name}}</h3></a>
+    	        <a href="/location/{{ result.id }}"><h3> {{result.name}}</h3></a><b>{{ round(result.distance_from(user_loc[0], user_loc[1]), 2) }}km</b>
                 {{result.description}}
             </div>
         </div>

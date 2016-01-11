@@ -5,6 +5,8 @@
         <form class="header-search" method="get" action="/location/search">
             <input type="text" placeholder="Search&hellip;" name="search"
                    value="{% if query %}{{ query }}{% end if %}"><input type="text" placeholder="Tags" name="tags"><button type="submit"><span class="fa fa-search"></span></button>
+            <input type="hidden" id="latitude" name="latitude">
+            <input type="hidden" id="longitude" name="longitude">
         </form>
         <nav class="header-links">
             <ul>
@@ -30,3 +32,25 @@
     </div>
 </header>
 
+<script type="application/javascript">
+    var lat = 0;
+    var long = 0;
+    lat_input = document.getElementById("latitude");
+    long_input = document.getElementById("longitude");
+    function getLocation() {
+        console.log("getLocation call")
+        if (navigator.geolocation) {
+            navigator.geolocation.getCurrentPosition(positionCallback);
+        } else {
+            console.log("geolocation unavailable")
+        }
+    }
+    function positionCallback(position) {
+        console.log("positionCallback call")
+        lat =  position.coords.latitude;
+        long = position.coords.longitude;
+        lat_input.value = ""+lat
+        long_input.value = ""+long
+     }
+    getLocation();
+</script>
