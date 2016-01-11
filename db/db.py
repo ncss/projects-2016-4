@@ -105,7 +105,7 @@ class Location:
 
     def change_location(self, address, longitude, latitude):
         conn.execute('''
-            UPDATE location
+            UPDATE locations
             SET address = ?, longitude = ?, latitude = ?
             WHERE id = ?;''', (address, longitude, latitude, self.id))
         conn.commit()
@@ -130,8 +130,6 @@ class Location:
         if res:
             location = Location(*res)
             return location
-
-
     @staticmethod
     def findall():
         cur = conn.execute('SELECT name, description, picture, uploader, address, longitude, latitude FROM locations')
@@ -228,4 +226,48 @@ class Tag:
 
     def delete(self):
         return Tag.delete_tag(self.name, self.place)
+
+
+
+class Rating:
+    def __init__(self, place, score, user):
+        self.place = place
+        self.score = score
+        self.user = user
+
+    @staticmethod
+    def create(place, score, user):
+        cur = conn.execute('''
+          SELECT place, score, user
+          FROM ratings
+          WHERE user = ? AND place = ?
+        ''', (user, place))
+        res = cur.fetchone()
+        if res is None:
+            conn.execute('''
+              INSERT INTO ratings(place, score, user)
+              VALUES(?, ?, ?);
+            ''', (place, score, user))
+            conn.commit()
+        else:
+            conn.execute('''
+            UPDATE ratings
+            SET score = ?
+            WHERE user = ?
+          ''', (score, user))
+            conn.commit()
+        return Rating(place, score, user)
+
+    @staticmethod
+    def find_user(user):
+        cur = conn.execute('''
+          SELECT place, score, user FROM ratings WHERE user = ?
+        ''', (user,))
+
+        res = cur.fetchone()
+        if res:
+            return Rating(*res)
+
+
+
 
