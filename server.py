@@ -58,7 +58,6 @@ def login_handler(response):
 
 def search_handler(response):
     context = {}
-    results = []
     entry = response.get_field('search')
     lat = float(response.get_field('latitude'))
     long = float(response.get_field('longitude'))
@@ -79,7 +78,7 @@ def search_handler(response):
 
 def location_handler(response, id):
     location = Location.find_id(id)
-    stars = Location.get_user_rating(, location)
+    stars = Location.get_user_rating(None, location)
     context = {'user_rating': stars}
     if location:
         context['location'] = location
