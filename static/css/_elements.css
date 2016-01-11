@@ -26,6 +26,9 @@ a:hover, a:focus {
     color: #004f35;
 }
 
+textarea {
+    padding: 15px;
+}
 
 fieldset {
     display: flex;
