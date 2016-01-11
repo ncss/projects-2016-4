@@ -102,7 +102,11 @@ def logout_handler(response):
 
 @login_check_decorator
 def location_creator(response):
-    pass
+    name = response.get_field('name')
+    description = response.get_field('description')
+    picture = response.get_field('picture')
+    address = response.get_field('address')
+
 
 if __name__ == '__main__':
     server = Server()
