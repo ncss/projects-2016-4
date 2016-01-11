@@ -48,7 +48,6 @@ def login_handler(response):
         render_page('login.html', response, context)
 
 def search_handler(response):
-    logged_in = get_login(response)
     context = {}
     results = []
     entry = response.get_field('search')
@@ -68,18 +67,15 @@ def location_handler(response, id):
 
 @login_check_decorator
 def create_handler(response):
-    logged_in = get_login(response)
     render_page('create_location.html', response, {})
 
 
 @login_check_decorator
 def user_handler(response, username):
-    logged_in = get_login(response)
     response.write("Profile {}".format(username))
 
 @login_check_decorator
 def profile_handler(response):
-    logged_in = get_login(response)
     context = {}
     render_page('account.html', response, context)
 
