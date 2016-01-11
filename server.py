@@ -68,7 +68,7 @@ def search_handler(response):
     tags = response.get_field('tags')
     entry = entry.strip()
     context['query'] = entry
-    context['tags']= tags
+    context['tags'] = tags
     if tags == '':
         search_results = Location.search_name(entry)
     elif entry == '':

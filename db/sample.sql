@@ -26,16 +26,16 @@ INSERT INTO locations(name, description, picture, uploader, address, latitude, l
 
 -- Sample tags
 INSERT INTO tags(name, place)
-  VALUES('Univeristy', 1);
+  VALUES('univeristy', 1);
 
 INSERT INTO tags(name, place)
-  VALUES('Univeristy', 2);
+  VALUES('univeristy', 2);
 
 INSERT INTO tags(name, place)
-  VALUES('Trash', 2);
+  VALUES('trash', 2);
 
 INSERT INTO tags(name, place)
-  VALUES('SLEEP', 3);
+  VALUES('sleep', 3);
 
 -- Sample ratings
 INSERT INTO ratings(place, score, user)

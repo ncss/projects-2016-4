@@ -12,9 +12,18 @@
 
 <main>
     {% if len(results) == 0 %}
-    <h1>No results for {{query}}</h1>
+        {% if query %}
+            <h1>No results for {{ query }}</h1>
+        {% elif tags %}
+            <h1>No results for {{ tags }}</h1>
+        {% end if %}
     {% else %}
-    <h1>Search results for {{query}}</h1>
+        {% if query %}
+            <h1>Search results for {{ query }}</h1>
+        {% elif tags %}
+            <h1>Search results for {{ tags }}</h1>
+        {% end if %}
+
 
     <div class = "searchresults">
         {% for result in results %}
