@@ -4,31 +4,39 @@
     <meta charset="utf-8">
     <title>Create a new location</title>
     {% include partials/head_meta.html %}
-    <link href="/static/css/login.css" rel="stylesheet">
+    <link href="/static/css/create_location.css" rel="stylesheet">
 </head>
 <body>
 
 {% include partials/header.html %}
 
 <main>
+    <form enctype="multipart/form-data" action="/location/create" class="location-form" method="post">
+      <fieldset>
+          <legend>Create New Location</legend>
 
-    <h1>Create New Location</h1>
-
-
-    <form enctype="multipart/form-data" action="/location/create" class="login-form" method="post">
-        <input type="text" placeholder="Name" name="name" required>
-        <!-- <input type="text" placeholder="Description" name="description"> -->
-        <textarea cols="25" rows="7" placeholder="Description" name="description" required></textarea>
-        <input type="file" placeholder="Picture" name="picture" accept = "image/*" required>
-        <input type="text" placeholder="Address" name="address" required>
-
-        <!-- will be replaced with map -->
-        <input type="text" placeholder="Latitude" name="lat" required>
-        <input type="text" placeholder="Longitude" name="long" required>
-
-        <input type="submit" value="Add Location">
+          <p>
+              <label>Name:</label>
+              <input type="text" placeholder="Name" name="name" required>
+          </p>
+          <p>
+              <label>Description:</label>
+              <textarea cols="55" rows="7" placeholder="Description" name="description" required></textarea>
+          </p>
+          <p>
+              <label>Picture:</label>
+              <input type="file" placeholder="Picture" name="picture" accept = "image/*" required>
+          </p>
+          <p>
+              <label>Address:</label>
+              <input type="text" placeholder="Address" name="address" required>
+          </p>
+          <!-- will be replaced with map -->
+          <input type="text" placeholder="Latitude" name="lat" required>
+          <input type="text" placeholder="Longitude" name="long" required>
+          <input type="submit" value="Add Location">
+      </fieldset>
     </form>
-
 </main>
 
 {% include partials/footer.html %}
