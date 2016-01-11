@@ -152,11 +152,12 @@ class Location:
             res.append(Location(*row))
         return res
 
-    def change_location(self, name, description, picture, address, latitude, longitude):
+    @staticmethod
+    def change_location(id, name, description, picture, address, latitude, longitude):
         conn.execute('''
             UPDATE locations
-            SET address = ?, longitude = ?, latitude = ?
-            WHERE id = ?;''', (name, description, picture, address, latitude, longitude, self.id))
+            SET name = ?, description = ?, picture = ?, address = ?, longitude = ?, latitude = ?
+            WHERE id = ?;''', (name, description, picture, address, latitude, longitude, id))
         conn.commit()
 
     @staticmethod
