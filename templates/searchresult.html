@@ -17,7 +17,9 @@
     <div class = "searchresults">
     {% for result in results %}
     <div class = "result">
+        <div id="img">
         <a href="/location/{{ result.id }}"><img src = "/static/place-images/{{result.picture}}"></a>
+        </div>
         <div>
 	    <a href="/location/{{ result.id }}"><h3> {{result.name}}</h3></a>
         {{result.description}}

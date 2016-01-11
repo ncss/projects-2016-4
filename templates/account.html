@@ -1,29 +1,48 @@
 <!DOCTYPE html>
 <html>
-<head>
-    <meta charset="utf-8">
-    <title>Register for Placebook</title>
-    {% include partials/head_meta.html %}
-    <link href="/static/css/login.css" rel="stylesheet">
-</head>
-<body>
+    <head>
+        <meta charset="utf-8">
+        <title>User Account</title>
+        {% include partials/head_meta.html %}
+        <link href="/static/css/login.css" rel="stylesheet">
+        <style>
+            .user-details {
+                margin-bottom: 50px;
+            }
+        </style>
+    </head>
+    <body>
 
-{% include partials/header.html %}
+        {% include partials/header.html %}
 
-<main>
+        <main>
+            
+            <div class="user-details">
 
-    <h1>Your Account</h1>
+                <h1>Bobby Tables</h1>
+                <h3>{{ user.username }}</h3>
+                <p>email: {{ user.email }}</p>
 
-    <div class="login-form">
+            </div>
 
-        <h1>{{ user.username }}</h1>
-        <p>email: {{ user.email }}</p>
+            <h1>Uploaded Locations</h1>
 
-    </div>
+            <div class="user-locations">
+                {% exec results = [] %}
+                {% for result in results %}
+                    <div id="img">
+                        <a href="/location/{{ result.id }}"><img src = "/static/place-images/{{result.picture}}"></a>
+                    </div>
+                    <div>
+                        <a href="/location/{{ result.id }}"><h3> {{result.name}}</h3></a>
+                        {{result.description}}
+                    </div>
+                {% end for %}
+            </div>
 
-</main>
+        </main>
 
-{% include partials/footer.html %}
+        {% include partials/footer.html %}
 
-</body>
+    </body>
 </html>
