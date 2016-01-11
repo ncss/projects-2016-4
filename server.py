@@ -44,7 +44,13 @@ def search_handler(response):
     response.write("Search")
 
 def location_handler(response, id):
-    pass
+    location = Location.find_id(id)
+    context = {}
+    if location:
+        context['location'] = location
+        render_page('location.html', response, context)
+    else:
+        response.set_status(404)
 
 @login_check_decorator
 def create_handler(response):
