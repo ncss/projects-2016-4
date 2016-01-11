@@ -30,7 +30,7 @@ def signup_handler(response):
     if logged_in is not None:
         response.redirect('/')
     else:
-        render_page('register.html', response, {})
+        render_page('signup.html', response, {})
 
 def login_handler(response):
     logged_in = get_login(response)
