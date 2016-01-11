@@ -48,7 +48,6 @@ def login_handler(response):
         render_page('login.html', response, context)
 
 def search_handler(response):
-    logged_in = get_login(response)
     context = {}
     results = []
     entry = response.get_field('search')
@@ -68,18 +67,16 @@ def location_handler(response, id):
 
 @login_check_decorator
 def create_handler(response):
-    logged_in = get_login(response)
-    render_page('create_location.html', response, {})
+    context = {'error': None}
+    render_page('create_location.html', response, context)
 
 
 @login_check_decorator
 def user_handler(response, username):
-    logged_in = get_login(response)
     response.write("Profile {}".format(username))
 
 @login_check_decorator
 def profile_handler(response):
-    logged_in = get_login(response)
     context = {}
     render_page('account.html', response, context)
 
@@ -133,6 +130,8 @@ def location_creator(response):
     file_output.write(file_input[2])
     file_output.close()
 
+    context = {'error': None}
+
     name = response.get_field('name')
     description = response.get_field('description')
     address = response.get_field('address')
@@ -143,11 +142,14 @@ def location_creator(response):
         lat = float(response.get_field('lat'))
         long = float(response.get_field('long'))
     except ValueError:
-        response.write('Invalid lat/long')
-        return
-
-    Location.create(name, description, filename_hash, user.id, address, lat, long)
-    response.write('Location successfully added')
+        context['error'] = 'Invalid latitude or longitude'
+        render_page('create_location.html', response, context)
+    if Location.find_name(name):
+        context['error'] = 'Place already exists'
+        render_page('create_location.html', response, context)
+    else:
+        Location.create(name, description, filename_hash, user.id, address, lat, long)
+        response.redirect("/location/{}".format(Location.find_name(name).id))
 
 
 if __name__ == '__main__':
@@ -155,7 +157,7 @@ if __name__ == '__main__':
     server.register('/', index_handler)
     server.register("/account/signup",signup_handler, post=signup_authentication)
     server.register("/account/login", login_handler, post=login_authentication)
-    server.register("/location/search", search_handler, post=search_handler)
+    server.register("/location/search", search_handler)
     server.register(r"/location/(\d+)", location_handler)
     server.register("/location/create", create_handler, post=location_creator)
     server.register("/account/profile/([a-z0-9A-Z._]+)", user_handler)

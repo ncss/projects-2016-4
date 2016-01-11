@@ -32,11 +32,9 @@ CREATE TABLE tags (
 );
 
 CREATE TABLE ratings (
-  id INTEGER NOT NULL,
   place INTEGER NOT NULL,
   score INTEGER NOT NULL,
   user INTEGER NOT NULL,
-  PRIMARY KEY (id),
   FOREIGN KEY (place) REFERENCES locations (id),
   FOREIGN KEY (user) REFERENCES users(id)
 );
