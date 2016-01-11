@@ -87,6 +87,16 @@ def create_handler(response):
     context = {'error': None}
     render_page('create_location.html', response, context)
 
+@login_check_decorator
+def edit_handler(response, location_id):
+    context = {'error': None}
+    location = Location.find_id(location_id)
+    if location:
+        context['location'] = location
+        render_page('edit_location.html', response, context)
+    else:
+        error_handler(response)
+
 def comment_handler(response):
     pass
 
@@ -179,28 +189,61 @@ def location_creator(response):
         context['error'] = 'Place already exists'
         render_page('create_location.html', response, context)
     else:
-        loc = Location.create(name, description, filename_hash, user.id, address, lat, long)
+        Location.create(name, description, filename_hash, user.id, address, lat, long)
         response.redirect("/location/{}".format(Location.find_name(name).id))
 
         tags = response.get_field('tags').split(',')
         if tags == ['']:
             tags = []
         for tag in tags:
-            Tag.create_tag(tag, loc.id)
+            Tag.create_tag(tag, location.find_name(name).id)
+    return
+
+@login_check_decorator
+def location_editor(response, id):
+    #file_input = response.get_file('picture')
+    #filename_hash = hashlib.sha1(file_input[2]).hexdigest()
+
+    #file_output = open('./static/place-images/{}'.format(filename_hash), 'wb')
+    #file_output.write(file_input[2])
+    #file_output.close()
+
+    context = {'error': None}
+
+    name = response.get_field('name')
+    description = response.get_field('description')
+    address = response.get_field('address')
+    username = get_login(response)
+    user = User.find(username)
+
+    try:
+        lat = float(response.get_field('lat'))
+        long = float(response.get_field('long'))
+    except ValueError:
+        context['error'] = 'Invalid latitude or longitude'
+        render_page('create_location.html', response, context)
+        return
+    if Location.find_name(name):
+        context['error'] = 'Place already exists'
+        render_page('create_location.html', response, context)
+    else:
+        Location.create(name, description, filename_hash, user.id, address, lat, long)
+        response.redirect("/location/{}".format(Location.find_name(name).id))
     return
 
 
 if __name__ == '__main__':
     server = Server()
-    server.register('/', index_handler)
-    server.register("/account/signup",signup_handler, post=signup_authentication)
-    server.register("/account/login", login_handler, post=login_authentication)
-    server.register("/location/search", search_handler)
+    server.register(r'/', index_handler)
+    server.register(r"/account/signup",signup_handler, post=signup_authentication)
+    server.register(r"/account/login", login_handler, post=login_authentication)
+    server.register(r"/location/search", search_handler)
     server.register(r"/location/(\d+)", location_handler, post=rating)
-    server.register('/comment', comment_handler, post=comment)
-    server.register("/location/create", create_handler, post=location_creator)
-    server.register("/account/profile/([a-z0-9A-Z._]+)", user_handler)
-    server.register("/account/profile", profile_handler)
-    server.register("/account/logout", logout_handler)
-    server.register("/.*", error_handler)
+    server.register(r'/comment', comment_handler, post=comment)
+    server.register(r"/location/create", create_handler, post=location_creator)
+    server.register(r"/location/edit/(\d+)", edit_handler, post=location_editor)
+    server.register(r"/account/profile/([a-z0-9A-Z._]+)", user_handler)
+    server.register(r"/account/profile", profile_handler)
+    server.register(r"/account/logout", logout_handler)
+    server.register(r"/.*", error_handler)
     server.run()
