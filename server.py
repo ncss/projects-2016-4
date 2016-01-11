@@ -114,7 +114,7 @@ def signup_authentication(response):
         context["error"] = "Passwords do not match"
     elif not re.match(r"^[0-9a-zA-Z_\.]+$", username):
         context["error"] = "Invalid username, please use only letters, numbers, underscores and periods"
-    elif User.find(username).email:
+    elif User.get_email(email) == email:
         context['error'] = "Email already taken"
     elif len(password) < 8:
         context["error"] = "Password must be at least 8 characters"
