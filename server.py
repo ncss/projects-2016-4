@@ -179,14 +179,14 @@ def location_creator(response):
         context['error'] = 'Place already exists'
         render_page('create_location.html', response, context)
     else:
-        loc = Location.create(name, description, filename_hash, user.id, address, lat, long)
+        Location.create(name, description, filename_hash, user.id, address, lat, long)
         response.redirect("/location/{}".format(Location.find_name(name).id))
 
         tags = response.get_field('tags').split(',')
         if tags == ['']:
             tags = []
         for tag in tags:
-            Tag.create_tag(tag, loc.id)
+            Tag.create_tag(tag, location.find_name(name).id)
     return
 
 
