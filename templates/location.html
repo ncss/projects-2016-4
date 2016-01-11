@@ -41,7 +41,7 @@
             {% if not logged_in %}
             <br />
             <br />
-                <p id="lograte">Log in to rate</p>
+                <p id="lograte"><a href="/account/login">Log in to rate</a></p>
             {% end if %}
             <div id="clear"></div>
             <p>{{ location.address }}</p>
@@ -57,6 +57,12 @@
         <a id="edit" href="edit/{{ location.id }}">Edit</a>
     {% end if %}
 
+    <div id="tags">
+        <h4>Tags</h4>
+
+        <p>{{ ', '.join(tag.name[0] for tag in loc_tags) }}</p>
+
+    </div>
     <div id="comments">
         {% if comments %}
         <h3>Comments</h3>

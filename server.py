@@ -84,11 +84,13 @@ def location_handler(response, id):
     context = {}
     user_object = User.find(get_login(response))
     location = Location.find_id(id)
+    loc_tags = Tag.find_from_place(location.id)
     if logged_in:
         stars = location.get_user_rating(user_object.id)
         context["user_rating"] = stars
     if location:
         context['location'] = location
+        context['loc_tags'] = loc_tags
         context['comments'] = Comment.find_place(location.id)
         render_page('location.html', response, context)
     else:
