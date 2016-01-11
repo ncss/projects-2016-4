@@ -152,11 +152,11 @@ class Location:
             res.append(Location(*row))
         return res
 
-    def change_location(self, address, longitude, latitude):
+    def change_location(self, name, description, picture, address, latitude, longitude):
         conn.execute('''
             UPDATE locations
             SET address = ?, longitude = ?, latitude = ?
-            WHERE id = ?;''', (address, longitude, latitude, self.id))
+            WHERE id = ?;''', (name, description, picture, address, latitude, longitude, self.id))
         conn.commit()
 
     @staticmethod
@@ -224,7 +224,7 @@ class Location:
     def search_address(address):
         cur = conn.execute('''
           SELECT name, description, picture, uploader, address, longitude, latitude, id FROM locations
-          WHERE address = ?
+          WHERE address LIKE '%' || ? || '%'
           ''', (address,))
         return [Location(*row) for row in cur.fetchall()]
 
