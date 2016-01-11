@@ -60,15 +60,17 @@ def search_handler(response):
     context = {}
     results = []
     entry = response.get_field('search')
-    if entry is None:
-        response.redirect('/')
-        return
+    tags = response.get_field('tags')
+    #if entry is None:
+        #response.redirect('/')
+        #return
     entry = entry.strip()
     context['query'] = entry
-    if entry == '':
-        response.redirect('/')
-        return
-    search_results = Location.search_name(entry)
+    context['tags']=tags
+    #if entry == '':
+        #response.redirect('/')
+        #return
+    search_results = Location.search(tags, entry)
     context['results'] = search_results
     render_page('searchresult.html', response, context)
 
