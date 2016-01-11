@@ -96,7 +96,6 @@ class Location:
 
     @staticmethod
     def create(name, description, picture, uploader, address, latitude, longitude):
-        print("asdf", name, description, picture, uploader, address, latitude, longitude)
         conn.execute('''
             INSERT INTO locations(name, description, picture, uploader, address, latitude, longitude)
             VALUES(?, ?, ?, ?, ?, ?, ?);

@@ -136,7 +136,7 @@ def location_creator(response):
     name = response.get_field('name')
     description = response.get_field('description')
     address = response.get_field('address')
-    username = get_login(response).decode()
+    username = get_login(response)
     user = User.find(username)
 
     try:
