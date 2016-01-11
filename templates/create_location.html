@@ -14,6 +14,11 @@
     <form enctype="multipart/form-data" class="location-form" method="post">
         <fieldset>
             <legend>Create New Location</legend>
+            {% if error %}
+                <p class="error">
+                    {{ error }}
+                </p>
+            {% end if %}
             <p class="error error-hidden"></p>
             <p>
                 <label>Name:</label>
