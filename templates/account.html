@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>Register for Placebook</title>
+    {% include partials/head_meta.html %}
+    <link href="/static/css/login.css" rel="stylesheet">
+</head>
+<body>
+
+{% include partials/header.html %}
+
+<main>
+
+    <h1>Your Account</h1>
+
+    <div class="login-form">
+
+        <h1>{{ user.username }}</h1>
+        <p>email: {{ user.email }}</p>
+
+    </div>
+
+</main>
+
+{% include partials/footer.html %}
+
+</body>
+</html>
