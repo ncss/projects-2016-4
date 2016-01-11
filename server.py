@@ -1,6 +1,7 @@
 from template.render import render
 from tornado.ncss import Server
 from db.db import User, Location
+import hashlib
 import re
 
 def get_login(response):
@@ -67,6 +68,7 @@ def create_handler(response):
     logged_in = get_login(response)
     render_page('create_location.html', response, {})
 
+
 @login_check_decorator
 def user_handler(response, username):
     logged_in = get_login(response)
@@ -113,13 +115,35 @@ def signup_authentication(response):
         return None
     render_page('signup.html', response, context)
 
+
 def logout_handler(response):
     response.clear_cookie("username")
     response.redirect("/")
 
 @login_check_decorator
 def location_creator(response):
-    pass
+    file_input = response.get_file('picture')
+    filename_hash = hashlib.sha1(file_input[2]).hexdigest()
+
+    file_output = open('./static/place-images/{}'.format(filename_hash), 'wb')
+    file_output.write(file_input[2])
+    file_output.close()
+
+    name = response.get_field('name')
+    description = response.get_field('description')
+    address = response.get_field('address')
+    username = get_login(response).decode()
+    user = User.find(username)
+
+    try:
+        lat = float(response.get_field('lat'))
+        long = float(response.get_field('long'))
+    except ValueError:
+        response.write('Invalid lat/long')
+        return
+
+    Location.create(name, description, filename_hash, user.id, address, lat, long)
+    response.write('Location successfully added')
 
 
 if __name__ == '__main__':
