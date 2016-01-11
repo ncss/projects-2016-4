@@ -83,8 +83,8 @@ def location_handler(response, id):
     user_object = User.find(get_login(response))
     location = Location.find_id(id)
     if logged_in:
-        stars = Location.get_user_rating(user_object, location)
-        context['user_rating': stars]
+        stars = location.get_user_rating(user_object.id)
+        context["user_rating"] = stars
     if location:
         context['location'] = location
         render_page('location.html', response, context)

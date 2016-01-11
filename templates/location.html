@@ -23,8 +23,8 @@
             <h2>{{ location.name }}</h2>
             <div id="star">
                 {% for i in range(5,0,-1) %}
-                    {% if logged_in and 1 is not None %}
-                        {% if i <= round(1) %}
+                    {% if logged_in and user_rating is not None %}
+                        {% if i <= round(user_rating) %}
                             <div id="star{{i}}" class="goldstar" {% if logged_in %} onclick="changeRate( {{ i }} , {{ location.id }} )" {% end if %}><i class="fa fa-star"></i></div>
                         {% else %}
                             <div id="star{{i}}" class="blackstar" {% if logged_in %} onclick="changeRate( {{ i }} , {{ location.id }} )" {% end if %}><i class="fa fa-star"></i></div>
