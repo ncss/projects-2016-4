@@ -1,6 +1,7 @@
 from template.render import render
 from tornado.ncss import Server
 from db.db import User
+import re
 
 def get_login(response):
     return response.get_secure_cookie('username')
@@ -72,10 +73,15 @@ def login_authentication(response):
 def signup_authentication(response):
     username = response.get_field('username')
     password = response.get_field('password')
+    c_password = response.get_field('confirm_password')
+    fname = response.get_field('fname')
+    lname = response.get_field('lname')
+    email = response.get_field('email')
     user = User.find(username)
-    if not user and username and password:
-        User.create(username, password, None, "james@ncss.com", None, None)
-        response.redirect("/account/login")
+    if not user and username and password and password == c_password and email and re.match(r"[0-9a-zA-Z_.]+", username):
+        User.create(username, password, None, email, fname, lname)
+        response.set_secure_cookie('username', username)
+        response.redirect("/")
     else:
         response.write('Invalid something, could not create. Better error messages coming soon. ')
 

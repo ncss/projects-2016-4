@@ -1,4 +1,5 @@
 from template.block_node import BlockNode
+from template.exceptions import TemplateSyntaxException
 
 
 class IfNode(BlockNode):
@@ -6,13 +7,19 @@ class IfNode(BlockNode):
         super().__init__()
         self.conditions = [condition]
         self.children = [[]]
+        self.has_else = False
 
-    def add_elif(self, condition):
+    def add_elif(self, condition, fname):
+        if self.has_else:
+            raise TemplateSyntaxException('[' + fname + '] {% elif ... %} should not be placed after {% else %}')
         self.conditions.append(condition)
         self.children.append([])
 
-    def add_else(self):
-        self.add_elif('True')
+    def add_else(self, fname):
+        if self.has_else:
+            raise TemplateSyntaxException('[' + fname + '] {% else %} should not be placed after another {% else %}')
+        self.add_elif('True', fname)
+        self.has_else = True
 
     def add_child(self, child):
         self.children[-1].append(child)
