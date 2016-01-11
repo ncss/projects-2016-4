@@ -140,7 +140,7 @@ class Location:
             VALUES(?, ?, ?, ?, ?, ?, ?);
         ''', (name, description, picture, uploader, address, latitude, longitude))
         conn.commit()
-        id = conn.execute('SELECT COUNT(id) FROM tags').fetchone()[0]
+        id = conn.execute('SELECT MAX(id) FROM locations').fetchone()[0]
         return Location(name, description, picture, uploader, address, latitude, longitude, id)
 
     @staticmethod
@@ -163,8 +163,8 @@ class Location:
     def find_id(id):
         cur = conn.execute('''
             SELECT name, description, picture, uploader, address, longitude, latitude, id FROM locations
-             WHERE id = ?
-             ''', (id,))
+            WHERE id = ?
+            ''', (id,))
         res = cur.fetchone()
         if res:
             return Location(*res)
@@ -182,7 +182,7 @@ class Location:
 
     @staticmethod
     def findall():
-        cur = conn.execute('SELECT name, description, picture, uploader, address, longitude, latitude FROM locations')
+        cur = conn.execute('SELECT name, description, picture, uploader, address, longitude, latitude, id FROM locations')
         res = []
         for row in cur:
             res.append(Location(*row))
@@ -215,7 +215,7 @@ class Location:
     def search_tag(tag_name):
         cur = conn.execute('''
           SELECT l.name, description, picture, uploader, address, longitude, latitude, l.id FROM locations l
-          JOIN  tags t ON l.id = t.place
+          JOIN tags t ON l.id = t.place
           WHERE t.name = ?
           ''', (tag_name,))
         return [Location(*row) for row in cur.fetchall()]
@@ -341,6 +341,34 @@ class Rating:
         if res:
             return Rating(*res)
 
-if __name__ == '__main__':
-    unsw = Location.find_name('UNSW')
-    unsw.avg_rating
+
+class Comment:
+    def __init__(self, author, comment, place, id=None):
+        self.author = author
+        self.comment = comment
+        self.place = place
+        self.id = id
+
+    @staticmethod
+    def create(author, comment, place):
+        conn.execute('''INSERT INTO comments(author, comment, place)
+            VALUES(?, ?, ?);''', (author, comment, place))
+        conn.commit()
+        id = conn.execute('SELECT MAX(id) FROM locations').fetchone()[0]
+        return Comment(author, comment, place, id=id)
+
+    @staticmethod
+    def find_author(author):
+        res = []
+        cur = conn.execute('SELECT * FROM comments WHERE author=?', (author,))
+        for row in cur.fetchall():
+            res.append(Comment(*row))
+        return res
+
+    @staticmethod
+    def find_place(place):
+        res = []
+        cur = conn.execute('SELECT * FROM comments WHERE place=?', (place,))
+        for row in cur.fetchall():
+            res.append(Comment(*row))
+        return res
