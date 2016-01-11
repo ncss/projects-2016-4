@@ -19,7 +19,6 @@ class User:
         self.lname = lname
         self.id = id
 
-
     @staticmethod
     def find(username):
         cur = conn.execute('''
@@ -76,6 +75,7 @@ class User:
     def create(username, password, dp, email, fname, lname):
         cur = conn.execute('''SELECT username, password, dp, email, fname, lname FROM users WHERE username = ? OR email = ?''', (username, email))
         res = cur.fetchone()
+        
         if res is None:
             conn.execute('''INSERT INTO users(username, password, dp, email, fname, lname)
             VALUES(?, ?, ?, ?, ?, ?)''',
@@ -131,7 +131,7 @@ class Location:
         self.id = id
 
     def __repr__(self):
-        return "Location(%s)" % self.name
+        return "Location({})".format(self.name)
 
     @staticmethod
     def create(name, description, picture, uploader, address, latitude, longitude):
@@ -140,8 +140,17 @@ class Location:
             VALUES(?, ?, ?, ?, ?, ?, ?);
         ''', (name, description, picture, uploader, address, latitude, longitude))
         conn.commit()
-        return Location(name, description, picture, uploader, address, latitude, longitude)
+        id = conn.execute('SELECT COUNT(id) FROM tags').fetchone()[0]
+        return Location(name, description, picture, uploader, address, latitude, longitude, id)
 
+    @staticmethod
+    def find_user_locations(user_id):
+        cur = conn.execute('''SELECT name, description, picture, uploader, address, latitude, longitude, id FROM
+            locations WHERE uploader = ?''', (user_id,))
+        res = []
+        for row in cur:
+            res.append(Location(*row))
+        return res
 
     def change_location(self, address, longitude, latitude):
         conn.execute('''
@@ -170,6 +179,7 @@ class Location:
         if res:
             location = Location(*res)
             return location
+
     @staticmethod
     def findall():
         cur = conn.execute('SELECT name, description, picture, uploader, address, longitude, latitude FROM locations')
@@ -232,13 +242,14 @@ class Location:
             average = total/len(res)
             return average
 
+
 class Tag:
     def __init__(self, name, place):
         self.name = name
         self.place = place
 
     def __repr__(self):
-        return 'Tag("%s")' % self.name
+        return 'Tag("{}")'.format(self.name)
 
     @staticmethod
     def create_tag(name, place):
@@ -279,10 +290,8 @@ class Tag:
           ''', (place, name))
         conn.commit()
 
-
     def delete(self):
         return Tag.delete_tag(self.name, self.place)
-
 
 
 class Rating:

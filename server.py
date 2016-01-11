@@ -1,6 +1,6 @@
 from template.render import render
 from tornado.ncss import Server
-from db.db import User, Location
+from db.db import User, Location, Rating, Tag
 import hashlib
 import re
 
@@ -24,11 +24,16 @@ def render_page(filename, response, context):
     if context['logged_in']:
         user = User.find(context['logged_in'])
         context['user'] = user
+    if 'query' not in context:
+        context['query'] = None
     html = render(filename, context )
     response.write(html)
 
 def index_handler(response):
     render_page('index.html', response, {})
+
+def rating(response, stars):
+    Rating.create(Location.id,stars, User.id)
 
 def signup_handler(response):
     logged_in = get_login(response)
@@ -51,7 +56,14 @@ def search_handler(response):
     context = {}
     results = []
     entry = response.get_field('search')
+    if entry is None:
+        response.redirect('/')
+        return
+    entry = entry.strip()
     context['query'] = entry
+    if entry == '':
+        response.redirect('/')
+        return
     search_results = Location.search_name(entry)
     context['results'] = search_results
     render_page('searchresult.html', response, context)
@@ -65,15 +77,23 @@ def location_handler(response, id):
     else:
         error_handler(response)
 
+
+
 def error_handler(response):
     response.set_status(404)
     #add in error page
-    render_page('generic-template.html', response, {})
+    render_page('404.html', response, {})
 
 @login_check_decorator
 def create_handler(response):
     context = {'error': None}
     render_page('create_location.html', response, context)
+
+def comment_handler(response):
+    pass
+
+def comment(response):
+    comment = "This is a comment"
 
 
 @login_check_decorator
@@ -153,12 +173,20 @@ def location_creator(response):
     except ValueError:
         context['error'] = 'Invalid latitude or longitude'
         render_page('create_location.html', response, context)
+        return
     if Location.find_name(name):
         context['error'] = 'Place already exists'
         render_page('create_location.html', response, context)
     else:
-        Location.create(name, description, filename_hash, user.id, address, lat, long)
+        loc = Location.create(name, description, filename_hash, user.id, address, lat, long)
         response.redirect("/location/{}".format(Location.find_name(name).id))
+
+        tags = response.get_field('tags').split(',')
+        if tags == ['']:
+            tags = []
+        for tag in tags:
+            Tag.create_tag(tag, loc.id)
+    return
 
 
 if __name__ == '__main__':
@@ -167,7 +195,8 @@ if __name__ == '__main__':
     server.register("/account/signup",signup_handler, post=signup_authentication)
     server.register("/account/login", login_handler, post=login_authentication)
     server.register("/location/search", search_handler)
-    server.register(r"/location/(\d+)", location_handler)
+    server.register(r"/location/(\d+)", location_handler, post=rating)
+    server.register('/comment', comment_handler, post=comment)
     server.register("/location/create", create_handler, post=location_creator)
     server.register("/account/profile/([a-z0-9A-Z._]+)", user_handler)
     server.register("/account/profile", profile_handler)

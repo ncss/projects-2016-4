@@ -39,8 +39,10 @@ main img {
 
 .header-search input[type=text] {
 	width: 400px;
-	border-radius: 9px;
+	border-radius: 6px 0 0 6px;
+	height: 50px;
 	padding: 15px;
+ 	border: 1px solid #ddd;
 }
 
 .header-search input,
@@ -52,6 +54,7 @@ main img {
 .header-search button[type=submit] {
 	height: 50px;
 	width: 50px;
+	border-radius: 0 6px 6px 0;
 }
 
 .header-links a {
