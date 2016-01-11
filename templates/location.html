@@ -21,7 +21,7 @@
                 <img src="/static/place-images/{{ location.picture }}">
             </div>
             <h2>{{ location.name }}</h2>
-            {% if location.uploader == user.id %}
+            {% if logged_in and location.uploader == user.id %}
              <a href="edit_location.html">Edit</a>
             {% end if %}
             <div id="star">

@@ -47,4 +47,4 @@ CREATE TABLE comments (
     FOREIGN KEY (place) REFERENCES locations (id),
     FOREIGN KEY (author) REFERENCES users(id),
     PRIMARY KEY (id)
-)
+);
