@@ -58,7 +58,6 @@ def login_handler(response):
 
 def search_handler(response):
     context = {}
-    results = []
     entry = response.get_field('search')
     lat = float(response.get_field('latitude'))
     long = float(response.get_field('longitude'))
@@ -78,13 +77,9 @@ def search_handler(response):
     render_page('searchresult.html', response, context)
 
 def location_handler(response, id):
-    logged_in = get_login(response)
-    context = {}
-    user_object = User.find(get_login(response))
     location = Location.find_id(id)
-    if logged_in:
-        stars = location.get_user_rating(user_object.id)
-        context["user_rating"] = stars
+    stars = Location.get_user_rating(None, location)
+    context = {'user_rating': stars}
     if location:
         context['location'] = location
         render_page('location.html', response, context)
@@ -122,18 +117,11 @@ def user_handler(response, username):
     response.write("Profile {}".format(username))
 
 @login_check_decorator
-def profile_handler(response, username=None):
-    if username is None:
-        user_object = User.find(get_login(response))
-    else:
-        user_object = User.find(username)
-        if user_object is None:
-            error_handler(response)
-            return
+def profile_handler(response):
     context = {}
+    user_object = User.find(get_login(response))
     user_locations = Location.find_user_locations(user_object.id)
     context['results'] = user_locations
-    context['user'] = user_object
     render_page('account.html', response, context)
 
 def login_authentication(response):
@@ -276,7 +264,7 @@ if __name__ == '__main__':
     server.register(r'/comment', comment_handler, post=comment)
     server.register(r"/location/create", create_handler, post=location_creator)
     server.register(r"/location/edit/(\d+)", edit_handler, post=location_editor)
-    server.register(r"/account/profile/([a-z0-9A-Z._]+)", profile_handler)
+    server.register(r"/account/profile/([a-z0-9A-Z._]+)", user_handler)
     server.register(r"/account/profile", profile_handler)
     server.register(r"/account/logout", logout_handler)
     server.register(r"/.*", error_handler)
