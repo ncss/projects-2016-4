@@ -2,7 +2,7 @@
 <html>
 <head>
     <meta charset="utf-8">
-    <title>Create a new location</title>
+    <title>Edit a location</title>
     {% include partials/head_meta.html %}
     <link href="/static/css/create_location.css" rel="stylesheet">
 </head>
@@ -13,7 +13,7 @@
 <main>
     <form enctype="multipart/form-data" class="location-form" method="post">
         <fieldset>
-            <legend><span class="fa fa-plus-circle"></span>&nbsp;Create New Location</legend>
+            <legend>Edit A Location</legend>
             {% if error %}
                 <p class="error">
                     {{ error }}
@@ -22,28 +22,24 @@
             <p class="error error-hidden"></p>
             <p>
                 <label>Name:</label>
-                <input type="text" placeholder="Name" name="name" required>
+                <input type="text" placeholder="Name" name="name" required value="{{location.name}}">
+
             </p>
             <p>
                 <label>Description:</label>
-                <textarea cols="55" rows="7" placeholder="Description" name="description" limit="200" required></textarea>
-            </p>
+                <textarea cols="55" rows="7" placeholder="Description" name="description" required>{{ location.description }}</textarea>            </p>
             <p>
                 <label>Picture:</label>
-                <input type="file" placeholder="Picture" name="picture" accept = "image/*" required>
+                <input type="file" placeholder="Picture" name="picture" accept = "image/*">
             </p>
             <p>
                 <label>Address:</label>
-                <input type="text" placeholder="Address" name="address" required>
-            </p>
-            <p>
-                <label>Tags:</label>
-                <input type="text" placeholder="Tags" name="tags">
+                <input type="text" placeholder="Address" name="address" required value="{{ location.address }}">
             </p>
 
           <input type="hidden" name="lat" required>
           <input type="hidden" name="long" required>
-          <input type="submit" value="Add Location">
+          <input type="submit" value="Update Location">
       </fieldset>
     </form>
 </main>
