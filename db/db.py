@@ -153,11 +153,28 @@ class Location:
             res.append(Location(*i))
         return res
 
+    @staticmethod
+    def search_tag(tag_name):
+        cur = conn.execute('''
+          SELECT l.name, description, picture, uploader, address, longitude, latitude, l.id FROM locations l
+          JOIN  tags t ON l.id = t.place
+          WHERE t.name = ?
+          ''', (tag_name,))
+        return [Location(*row) for row in cur.fetchall()]
+
+    def get_tags(self):
+        return Tag.find_from_place(self.id)
+
+    def add_tag(self, name):
+        return Tag.create_tag(name, self.id)
 
 class Tag:
     def __init__(self, name, place):
         self.name = name
         self.place = place
+
+    def __repr__(self):
+        return 'Tag("%s")' % self.name
 
     @staticmethod
     def create_tag(name, place):
@@ -166,25 +183,38 @@ class Tag:
         return Tag(name, place)
 
     @staticmethod
-    def change_tag(name):
-        conn.execute('''
-            UPDATE tags
-            SET name = ?
-            WHERE place = ?;''', (name, place))
-
-    @staticmethod
     def find_tag(name):
         cur = conn.execute('''
-          SELECT * FROM tags
+          SELECT name, place FROM tags
           WHERE name = ?
         ''', (name,))
+        res = cur.fetchone()
+
+        if res:
+            return Tag(*res)
 
     @staticmethod
-    def delete_tag(id):
+    def find_from_place(place):
+        cur = conn.execute('''
+          SELECT name
+          FROM tags
+          WHERE place = ?
+        ''', (place,))
+
+        res = []
+        for name in cur.fetchall():
+            res.append(Tag(name, place))
+        return res
+
+    @staticmethod
+    def delete_tag(name, place):
         conn.execute('''
           DELETE FROM tags
-          WHERE place = ?
-          ''', (place,))
+          WHERE place = ? AND name = ?
+          ''', (place, name))
 
+
+    def delete(self):
+        return Tag.delete_tag(self.name, self.place)
 
 
