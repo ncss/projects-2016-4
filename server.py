@@ -49,7 +49,7 @@ def location_handler(response, id):
 @login_check_decorator
 def create_handler(response):
     logged_in = get_login(response)
-    response.write("Create Location")
+    render_page('create_location.html', response, {})
 
 @login_check_decorator
 def user_handler(response, username):
@@ -103,10 +103,7 @@ def logout_handler(response):
 
 @login_check_decorator
 def location_creator(response):
-    name = response.get_field('name')
-    description = response.get_field('description')
-    picture = response.get_field('picture')
-    address = response.get_field('address')
+    pass
 
 
 if __name__ == '__main__':
