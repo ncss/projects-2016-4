@@ -75,5 +75,8 @@ main img {
 	font-size: small;
 	letter-spacing: 1px;
 	padding-bottom: 2em;
+	position: fixed;
+	bottom: 0;
+	width: 100%;
 }
 
