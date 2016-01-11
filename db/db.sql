@@ -26,7 +26,7 @@ CREATE TABLE locations (
 CREATE TABLE tags (
   id INTEGER NOT NULL,
   name TEXT NOT NULL,
-  place TEXT NOT NULL,
+  place INTEGER NOT NULL,
   PRIMARY KEY (id),
   FOREIGN KEY (place) REFERENCES locations(id)
 );
