@@ -10,16 +10,20 @@ def run_sql(sql):
 
 
 class User:
-    def __init__(self, username, password, email, id=None):
+    def __init__(self, username, password, dp, email, fname, lname, id=None):
         self.username = username
         self.password = password
+        self.dp = dp
         self.email = email
+        self.fname = fname
+        self.lname = lname
         self.id = id
+
 
     @staticmethod
     def find(username):
         cur = conn.execute('''
-            SELECT username, password, email, id
+            SELECT username, password, dp, email, fname, lname, id
             FROM users
             WHERE username = ?''', (username,))
         res = cur.fetchone()
