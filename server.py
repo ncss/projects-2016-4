@@ -1,6 +1,6 @@
 from template.render import render
 from tornado.ncss import Server
-from db.db import User, Location
+from db.db import User, Location, Rating
 import hashlib
 import re
 
@@ -29,6 +29,9 @@ def render_page(filename, response, context):
 
 def index_handler(response):
     render_page('index.html', response, {})
+
+def rating(response, stars):
+    Rating.create(Location.id,stars, User.id)
 
 def signup_handler(response):
     logged_in = get_login(response)
@@ -64,6 +67,8 @@ def location_handler(response, id):
         render_page('location.html', response, context)
     else:
         error_handler(response)
+
+
 
 def error_handler(response):
     response.set_status(404)
@@ -167,7 +172,7 @@ if __name__ == '__main__':
     server.register("/account/signup",signup_handler, post=signup_authentication)
     server.register("/account/login", login_handler, post=login_authentication)
     server.register("/location/search", search_handler)
-    server.register(r"/location/(\d+)", location_handler)
+    server.register(r"/location/(\d+)", location_handler, post=rating)
     server.register("/location/create", create_handler, post=location_creator)
     server.register("/account/profile/([a-z0-9A-Z._]+)", user_handler)
     server.register("/account/profile", profile_handler)
