@@ -214,11 +214,19 @@ def location_editor(response, id):
 
     context = {'error': None}
     location = Location.find_id(id)
+    orig_name = location.name
+    context['location'] = location
     if location is None:
         context['error'] = 'Place does not exist'
         render_page('edit_location.html', response, context)
         return
     name = response.get_field('name')
+    if orig_name != name:
+        if Location.find_name(name):
+            context['error'] = 'Place already exists'
+            render_page('edit_location.html', response, context)
+            return None
+
     description = response.get_field('description')
     address = response.get_field('address')
     username = get_login(response)
