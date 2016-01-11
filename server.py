@@ -32,8 +32,12 @@ def render_page(filename, response, context):
 def index_handler(response):
     render_page('index.html', response, {})
 
-def rating(response, stars):
-    Rating.create(Location.id,stars, User.id)
+def rating(response, location_id):
+    if get_login(response):
+        user_object = User.find(get_login(response))
+        Rating.create(location_id, response.get_field('stars'), user_object.id)
+
+
 
 def signup_handler(response):
     logged_in = get_login(response)
@@ -199,6 +203,7 @@ if __name__ == '__main__':
     server.register("/account/login", login_handler, post=login_authentication)
     server.register("/location/search", search_handler)
     server.register(r"/location/(\d+)", location_handler, post=rating)
+    server.register(r"/location/(\d+)/rate", rating)
     server.register('/comment', comment_handler, post=comment)
     server.register("/location/create", create_handler, post=location_creator)
     server.register("/account/profile/([a-z0-9A-Z._]+)", user_handler)

@@ -162,7 +162,7 @@ class Location:
     @staticmethod
     def find_id(id):
         cur = conn.execute('''
-            SELECT name, description, picture, uploader, address, longitude, latitude FROM locations
+            SELECT name, description, picture, uploader, address, longitude, latitude, id FROM locations
              WHERE id = ?
              ''', (id,))
         res = cur.fetchone()
