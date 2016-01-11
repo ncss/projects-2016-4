@@ -29,6 +29,17 @@ class User:
         if res:
             return User(*res)
 
+    @property
+    def full_name(self):
+        if self.fname and self.lname:
+            return self.fname + ' ' + self.lname
+        elif self.fname:
+            return self.fname
+        elif self.lname:
+            return self.lname
+        else:
+            return self.username
+    
     @staticmethod
     def get_email(email):
         cur = conn.execute('''
