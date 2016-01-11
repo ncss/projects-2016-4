@@ -17,10 +17,10 @@
     <div class = "searchresults ">
     {% for result in results %}
     <div class = "result">
-        <div id="img">
+        <div class="img">
         <a href="/location/{{ result.id }}"><img src = "/static/place-images/{{result.picture}}"></a>
         </div>
-        <div>
+        <div class="text">
 	    <a href="/location/{{ result.id }}"><h3> {{result.name}}</h3></a>
         {{result.description}}
         </div>

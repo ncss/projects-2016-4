@@ -30,8 +30,15 @@ main h1{
 }
 
 
-#img > img {
+.img > img {
     width: 100%;
     overflow: hidden;
     height: 200px;
+}
+.img{
+    width: 250px;
+
+}
+.text {
+    width: 500px;
 }
