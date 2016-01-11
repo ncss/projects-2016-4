@@ -103,6 +103,9 @@ def user_handler(response, username):
 @login_check_decorator
 def profile_handler(response):
     context = {}
+    user_object = User.find(get_login(response))
+    user_locations = Location.find_user_locations(user_object.id)
+    context['results'] = user_locations
     render_page('account.html', response, context)
 
 def login_authentication(response):

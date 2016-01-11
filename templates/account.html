@@ -4,29 +4,32 @@
         <meta charset="utf-8">
         <title>User Account</title>
         {% include partials/head_meta.html %}
-        <link href="/static/css/login.css" rel="stylesheet">
-        <link href="/static/css/account.css" rel="stylesheet">
-
+        <link href="/static/css/searchresult.css" rel="stylesheet">
+        <style>
+            .user-details {
+                margin-bottom: 50px;
+            }
+        </style>
     </head>
     <body>
 
         {% include partials/header.html %}
 
-        <main class="login-form">
-            <fieldset>
-                <legend>Bobby Tables</legend>
+        <main>
+            
             <div class="user-details">
+
+                <h1>Bobby Tables</h1>
                 <h3>{{ user.username }}</h3>
                 <p>email: {{ user.email }}</p>
 
             </div>
-            </fieldset>
-            <fieldset class ="upload-location">
-            <legend>Uploaded Locations</legend>
 
-            <div class="user-locations">
-                {% exec results = [] %}
+            <h1>Uploaded Locations</h1>
+
+            <div class="searchresults">
                 {% for result in results %}
+                <div class = "result">
                     <div id="img">
                         <a href="/location/{{ result.id }}"><img src = "/static/place-images/{{result.picture}}"></a>
                     </div>
@@ -34,9 +37,10 @@
                         <a href="/location/{{ result.id }}"><h3> {{result.name}}</h3></a>
                         {{result.description}}
                     </div>
+                </div>
                 {% end for %}
             </div>
-            </fieldset>
+
         </main>
 
         {% include partials/footer.html %}
