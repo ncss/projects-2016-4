@@ -29,6 +29,17 @@ class User:
         if res:
             return User(*res)
 
+    @property
+    def full_name(self):
+        if self.fname and self.lname:
+            return self.fname + ' ' + self.lname
+        elif self.fname:
+            return self.fname
+        elif self.lname:
+            return self.lname
+        else:
+            return self.username
+    
     @staticmethod
     def get_email(email):
         cur = conn.execute('''
@@ -360,7 +371,7 @@ class Comment:
     @staticmethod
     def find_author(author):
         res = []
-        cur = conn.execute('SELECT * FROM comments WHERE author=?', (author,))
+        cur = conn.execute('SELECT author, comment, place, id FROM comments WHERE author=?', (author,))
         for row in cur.fetchall():
             res.append(Comment(*row))
         return res
@@ -368,7 +379,7 @@ class Comment:
     @staticmethod
     def find_place(place):
         res = []
-        cur = conn.execute('SELECT * FROM comments WHERE place=?', (place,))
+        cur = conn.execute('SELECT author, comment, place, id FROM comments WHERE place=?', (place,))
         for row in cur.fetchall():
             res.append(Comment(*row))
         return res

@@ -38,11 +38,18 @@
     float: right;
     margin-top: 15px;
 }
-#goldstar{
+.goldstar{
     color: #ffa300;
     float: right;
 }
-#blackstar{
+.blackstar{
     color: #000000;
     float: right;
+}
+.silverstar{
+    color: #999999;
+    float: right;
+}
+#lograte{
+    color: #aa0000
 }
