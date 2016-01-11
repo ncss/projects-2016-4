@@ -76,7 +76,8 @@ def search_handler(response):
 
 def location_handler(response, id):
     location = Location.find_id(id)
-    context = {}
+    stars = Location.get_user_rating(location)
+    context = {'user_rating': stars}
     if location:
         context['location'] = location
         render_page('location.html', response, context)
