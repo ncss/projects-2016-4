@@ -155,7 +155,7 @@ class Location:
     def change_location(self, name, description, picture, address, latitude, longitude):
         conn.execute('''
             UPDATE locations
-            SET address = ?, longitude = ?, latitude = ?
+            SET name = ?, description = ?, picture = ?, address = ?, latitude = ?, longitude = ?
             WHERE id = ?;''', (name, description, picture, address, latitude, longitude, self.id))
         conn.commit()
 
