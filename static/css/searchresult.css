@@ -1,0 +1,23 @@
+
+main h1{
+    text-align: center ;
+}
+
+.result {
+    display:flex;
+}
+
+.result img {
+    margin:5px;
+}
+
+.result div{
+    float:right;
+    margin:5px;
+
+}
+
+.searchresults {
+    margin:auto;
+    max-width: 75%;
+}
