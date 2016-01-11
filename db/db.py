@@ -39,7 +39,8 @@ class User:
             return self.lname
         else:
             return self.username
-    
+
+
     @staticmethod
     def get_email(email):
         cur = conn.execute('''
@@ -163,10 +164,11 @@ class Location:
             res.append(Location(*row))
         return res
 
-    def change_location(self, name, description, picture, address, latitude, longitude):
+    @staticmethod
+    def change_location(id, name, description, picture, address, latitude, longitude):
         conn.execute('''
             UPDATE locations
-            SET address = ?, longitude = ?, latitude = ?
+            SET name = ?, description = ?, picture = ?, address = ?, latitude = ?, longitude = ?
             WHERE id = ?;''', (name, description, picture, address, latitude, longitude, self.id))
         conn.commit()
 
@@ -232,9 +234,19 @@ class Location:
         return [Location(*row) for row in cur.fetchall()]
 
     @staticmethod
+    def search(tag_name, location_name):
+        cur = conn.execute('''
+          SELECT l.name, description, picture, uploader, address, longitude, latitude, l.id FROM locations l
+          JOIN tags t ON l.id = t.place
+          WHERE t.name = ? AND (address LIKE '%' || ? || '%' OR l.name LIKE '%' || ? || '%')
+          ''', (tag_name, location_name, location_name))
+        return [Location(*row) for row in cur.fetchall()]
+
+
+    @staticmethod
     def search_address(address):
         cur = conn.execute('''
-          SELECT name, description, picture, uploader, address, longitude, latitude, id FROM locations
+          SELECT l.name, description, picture, uploader, address, longitude, latitude, l.id FROM locations l
           WHERE address LIKE '%' || ? || '%'
           ''', (address,))
         return [Location(*row) for row in cur.fetchall()]
