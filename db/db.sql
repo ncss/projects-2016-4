@@ -24,19 +24,27 @@ CREATE TABLE locations (
 );
 
 CREATE TABLE tags (
-  id INTEGER NOT NULL,
-  name TEXT NOT NULL,
-  place TEXT NOT NULL,
-  PRIMARY KEY (id),
-  FOREIGN KEY (place) REFERENCES locations(id)
+    id INTEGER NOT NULL,
+    name TEXT NOT NULL,
+    place INTEGER NOT NULL,
+    PRIMARY KEY (id),
+    FOREIGN KEY (place) REFERENCES locations (id)
 );
 
 CREATE TABLE ratings (
-  id INTEGER NOT NULL,
-  place INTEGER NOT NULL,
-  score INTEGER NOT NULL,
-  user INTEGER NOT NULL,
-  PRIMARY KEY (id),
-  FOREIGN KEY (place) REFERENCES locations (id),
-  FOREIGN KEY (user) REFERENCES users(id)
+    place INTEGER NOT NULL,
+    score INTEGER NOT NULL,
+    user INTEGER NOT NULL,
+    FOREIGN KEY (place) REFERENCES locations (id),
+    FOREIGN KEY (user) REFERENCES users(id)
+);
+
+CREATE TABLE comments (
+    id INTEGER NOT NULL,
+    author INTEGER NOT NULL,
+    comment TEXT NOT NULL,
+    place INTEGER NOT NULL,
+    FOREIGN KEY (place) REFERENCES locations (id),
+    FOREIGN KEY (author) REFERENCES users(id),
+    PRIMARY KEY (id)
 );

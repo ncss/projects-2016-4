@@ -4,15 +4,22 @@
     <meta charset="utf-8">
     <title>Placebook</title>
     {% include partials/head_meta.html %}
-    <link href="/static/css/login.css" rel="stylesheet">
+    <link href="/static/css/index.css" rel="stylesheet">
 </head>
 <body>
 
 {% include partials/header.html %}
 
-<main>
 
-    <h1>Site index</h1>
+<main>
+    <img src="/static/images/hero.png" class="hero" alt="Hero image">
+
+    <div id="jumbotron">
+        <h1>Welcome to Placebook{% if logged_in %}, {{ user.full_name }}{% end if %}</h1>
+        <p>For unique, exquisite locations. For colours filled in the emptiness of small landmarks. Placebook will find you your next attraction, whether
+        it's a outstanding bakery or an adrenaline adventure. We place the hidden beauty from cities so you can experience them.</p>
+        <p> We are Placebook.</p>
+    </div>
 
 </main>
 

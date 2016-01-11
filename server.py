@@ -1,6 +1,6 @@
 from template.render import render
 from tornado.ncss import Server
-from db.db import User, Location
+from db.db import User, Location, Rating, Tag, Comment
 import hashlib
 import re
 
@@ -24,11 +24,22 @@ def render_page(filename, response, context):
     if context['logged_in']:
         user = User.find(context['logged_in'])
         context['user'] = user
+    if 'query' not in context:
+        context['query'] = None
+    if 'tags' not in context:
+        context['tags'] = None
     html = render(filename, context )
     response.write(html)
 
 def index_handler(response):
     render_page('index.html', response, {})
+
+def rating(response, location_id):
+    if get_login(response):
+        user_object = User.find(get_login(response))
+        Rating.create(location_id, response.get_field('stars'), user_object.id)
+
+
 
 def signup_handler(response):
     logged_in = get_login(response)
@@ -48,39 +59,96 @@ def login_handler(response):
         render_page('login.html', response, context)
 
 def search_handler(response):
-    logged_in = get_login(response)
     context = {}
     results = []
     entry = response.get_field('search')
+    lat_field = response.get_field('latitude')
+    long_field = response.get_field('longitude')
+    if (lat_field != None and long_field != None and lat_field != '' and long_field != ''):
+        lat = float(lat_field)
+        long = float(long_field)
+        context['user_loc'] = [lat, long]
+    else:
+        context['user_loc'] = None
+    tags = response.get_field('tags')
+    entry = entry.strip()
     context['query'] = entry
-    search_results = Location.search_name(entry)
+    context['tags'] = tags
+    if tags == '':
+        search_results = Location.search_name(entry)
+    elif entry == '':
+        search_results = Location.search_tag(tags)
+    else:
+        search_results = Location.search(tags, entry)
+    if (lat_field != None and long_field != None and lat_field != '' and long_field != ''):
+        search_results.sort(key = lambda x: x.distance_from(lat, long))
     context['results'] = search_results
     render_page('searchresult.html', response, context)
 
 def location_handler(response, id):
-    location = Location.find_id(id)
+    logged_in = get_login(response)
     context = {}
+    user_object = User.find(get_login(response))
+    location = Location.find_id(id)
+    loc_tags = Tag.find_from_place(location.id)
+    if logged_in:
+        stars = location.get_user_rating(user_object.id)
+        context["user_rating"] = stars
     if location:
         context['location'] = location
+        context['loc_tags'] = loc_tags
+        context['comments'] = Comment.find_place(location.id)
         render_page('location.html', response, context)
     else:
-        response.set_status(404)
+        error_handler(response)
+
+def error_handler(response):
+    response.set_status(404)
+    render_page('404.html', response, {})
 
 @login_check_decorator
 def create_handler(response):
-    logged_in = get_login(response)
-    render_page('create_location.html', response, {})
+    context = {'error': None}
+    render_page('create_location.html', response, context)
+
+@login_check_decorator
+def edit_handler(response, location_id):
+    context = {'error': None}
+    location = Location.find_id(location_id)
+    if location:
+        context['location'] = location
+        render_page('edit_location.html', response, context)
+    else:
+        error_handler(response)
+
+def comment_handler(response):
+    pass
+
+@login_check_decorator
+def comment(response, location_id):
+    user_object = User.find(get_login(response))
+    comment = response.get_field('comment')
+    Comment.create(user_object.id, comment, location_id)
+    response.redirect("/location/" + location_id)
 
 
 @login_check_decorator
 def user_handler(response, username):
-    logged_in = get_login(response)
     response.write("Profile {}".format(username))
 
 @login_check_decorator
-def profile_handler(response):
-    logged_in = get_login(response)
+def profile_handler(response, username=None):
+    if username is None:
+        user_object = User.find(get_login(response))
+    else:
+        user_object = User.find(username)
+        if user_object is None:
+            error_handler(response)
+            return
     context = {}
+    user_locations = Location.find_user_locations(user_object.id)
+    context['results'] = user_locations
+    context['user'] = user_object
     render_page('account.html', response, context)
 
 def login_authentication(response):
@@ -112,6 +180,10 @@ def signup_authentication(response):
         context["error"] = "Passwords do not match"
     elif not re.match(r"^[0-9a-zA-Z_\.]+$", username):
         context["error"] = "Invalid username, please use only letters, numbers, underscores and periods"
+    elif User.get_email(email) == email:
+        context['error'] = "Email already taken"
+    elif len(password) < 8:
+        context["error"] = "Password must be at least 8 characters"
     else:
         User.create(username, password, None, email, fname, lname)
         response.set_secure_cookie('username', username)
@@ -133,6 +205,8 @@ def location_creator(response):
     file_output.write(file_input[2])
     file_output.close()
 
+    context = {'error': None}
+
     name = response.get_field('name')
     description = response.get_field('description')
     address = response.get_field('address')
@@ -143,22 +217,82 @@ def location_creator(response):
         lat = float(response.get_field('lat'))
         long = float(response.get_field('long'))
     except ValueError:
-        response.write('Invalid lat/long')
+        context['error'] = 'Invalid latitude or longitude'
+        render_page('create_location.html', response, context)
         return
+    if Location.find_name(name):
+        context['error'] = 'Place already exists'
+        render_page('create_location.html', response, context)
+    else:
+        Location.create(name, description, filename_hash, user.id, address, lat, long)
+        response.redirect("/location/{}".format(Location.find_name(name).id))
 
-    Location.create(name, description, filename_hash, user.id, address, lat, long)
-    response.write('Location successfully added')
+        tags = response.get_field('tags').split(',')
+        if tags == ['']:
+            tags = []
+        for tag in tags:
+            Tag.create_tag(tag, Location.find_name(name).id)
+    return
+
+@login_check_decorator
+def location_editor(response, id):
+    #file_input = response.get_file('picture')
+    #filename_hash = hashlib.sha1(file_input[2]).hexdigest()
+
+    #file_output = open('./static/place-images/{}'.format(filename_hash), 'wb')
+    #file_output.write(file_input[2])
+    #file_output.close()
+
+    context = {'error': None}
+    location = Location.find_id(id)
+    orig_name = location.name
+    context['location'] = location
+    if location is None:
+        context['error'] = 'Place does not exist'
+        render_page('edit_location.html', response, context)
+        return
+    name = response.get_field('name')
+    if orig_name != name:
+        if Location.find_name(name):
+            context['error'] = 'Place already exists'
+            render_page('edit_location.html', response, context)
+            return None
+
+    description = response.get_field('description')
+    address = response.get_field('address')
+    username = get_login(response)
+    user = User.find(username)
+    Location.change_location(id, name, description, location.picture, address, location.latitude, location.longitude)
+    response.redirect("/location/" + id)
+
+    #try:
+     #   lat = float(response.get_field('lat'))
+      #  long = float(response.get_field('long'))
+    #except ValueError:
+     #   context['error'] = 'Invalid latitude or longitude'
+      #  render_page('create_location.html', response, context)
+       # return
+    #if Location.find_name(name):
+     #   context['error'] = 'Place already exists'
+      #  render_page('create_location.html', response, context)
+    #else:
+     #   Location.create(name, description, filename_hash, user.id, address, lat, long)
+      #  response.redirect("/location/{}".format(Location.find_name(name).id))
+    #return
 
 
 if __name__ == '__main__':
     server = Server()
-    server.register('/', index_handler)
-    server.register("/account/signup",signup_handler, post=signup_authentication)
-    server.register("/account/login", login_handler, post=login_authentication)
-    server.register("/location/search", search_handler, post=search_handler)
-    server.register(r"/location/(\d+)", location_handler)
-    server.register("/location/create", create_handler, post=location_creator)
-    server.register("/account/profile/([a-z0-9A-Z._]+)", user_handler)
-    server.register("/account/profile", profile_handler)
-    server.register("/account/logout", logout_handler)
+    server.register(r'/', index_handler)
+    server.register(r"/account/signup",signup_handler, post=signup_authentication)
+    server.register(r"/account/login", login_handler, post=login_authentication)
+    server.register(r"/location/search", search_handler)
+    server.register(r"/location/(\d+)", location_handler, post=rating)
+    server.register(r'/location/(\d+)/comment', comment_handler, post=comment)
+    server.register(r"/location/create", create_handler, post=location_creator)
+    server.register(r"/location/edit/(\d+)", edit_handler, post=location_editor)
+    server.register(r"/account/profile/([a-z0-9A-Z._]+)", profile_handler)
+    server.register(r"/account/profile", profile_handler)
+    server.register(r"/account/logout", logout_handler)
+    server.register(r"/.*", error_handler)
     server.run()

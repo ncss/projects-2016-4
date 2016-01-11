@@ -9,7 +9,10 @@ main h1{
 }
 
 .result img {
+    max-height: 250px;
+    min-height: 250px;
     min-width: 250px;
+    max-width: 250px;
     margin-bottom:10px;
     margin-right: 20px;
     float: left;
@@ -24,4 +27,18 @@ main h1{
 .searchresults {
     margin:auto;
     width: 75%;
+}
+
+
+.img > img {
+    width: 100%;
+    overflow: hidden;
+    height: 200px;
+}
+.img{
+    width: 250px;
+
+}
+.text {
+    width: 500px;
 }

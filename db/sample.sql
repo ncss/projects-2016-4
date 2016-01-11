@@ -13,29 +13,29 @@ INSERT INTO users(username, password, dp, email, fname, lname)
 
 -- Sample locations
 INSERT INTO locations(name, description, picture, uploader, address, latitude, longitude)
-  VALUES('SIT', 'School of Information Technologies', 'sample text', 1, 'USyd', -33.89, 151.2);
+  VALUES('SIT', 'School of Information Technologies', 'sit.jpg', 1, 'USyd', -33.89, 151.2);
 
 INSERT INTO locations(name, description, picture, uploader, address, latitude, longitude)
-  VALUES('UNSW', 'Trash', 'sample text', 1, 'nowhere', -33.91, 151.2);
+  VALUES('UNSW', 'Trash', 'unsw.jpg', 1, 'nowhere', -33.91, 151.2);
 
 INSERT INTO locations(name, description, picture, uploader, address, latitude, longitude)
-  VALUES('The Womens College', 'Cool place', 'sample text', 2, 'USyd', -33.89, 151.2);
+  VALUES('The Womens College', 'Cool place', 'womens_college.jpg', 2, 'USyd', -33.89, 151.2);
 
 INSERT INTO locations(name, description, picture, uploader, address, latitude, longitude)
-  VALUES('The mens College', 'Cool place', 'sample text', 5, 'USyd', -33.89, 151.2);
+  VALUES('The mens College', 'Cool place', 'womens_college.jpg', 5, 'USyd', -33.89, 151.2);
 
 -- Sample tags
 INSERT INTO tags(name, place)
-  VALUES('Univeristy', 1);
+  VALUES('univeristy', 1);
 
 INSERT INTO tags(name, place)
-  VALUES('Univeristy', 2);
+  VALUES('univeristy', 2);
 
 INSERT INTO tags(name, place)
-  VALUES('Trash', 2);
+  VALUES('trash', 2);
 
 INSERT INTO tags(name, place)
-  VALUES('SLEEP', 3);
+  VALUES('sleep', 3);
 
 -- Sample ratings
 INSERT INTO ratings(place, score, user)
@@ -43,3 +43,10 @@ INSERT INTO ratings(place, score, user)
 
 INSERT INTO ratings(place, score, user)
   VALUES(2, 1, 1);
+
+-- Sample comments
+INSERT INTO comments(author, comment, place)
+  VALUES(1, 'Its like there are only two people here', 2);
+
+INSERT INTO comments(author, comment, place)
+  VALUES(4, 'Where is the green sheep?', 1);
