@@ -1,6 +1,6 @@
 from template.render import render
 from tornado.ncss import Server
-from db.db import User, Location, Rating, Tag
+from db.db import User, Location, Rating, Tag, Comment
 import hashlib
 import re
 
@@ -89,6 +89,7 @@ def location_handler(response, id):
         context["user_rating"] = stars
     if location:
         context['location'] = location
+        context['comments'] = Comment.find_place(location.id)
         render_page('location.html', response, context)
     else:
         error_handler(response)
@@ -115,8 +116,12 @@ def edit_handler(response, location_id):
 def comment_handler(response):
     pass
 
-def comment(response):
-    comment = "This is a comment"
+@login_check_decorator
+def comment(response, location_id):
+    user_object = User.find(get_login(response))
+    comment = response.get_field('comment')
+    Comment.create(user_object.id, comment, location_id)
+    response.redirect("/location/" + location_id)
 
 
 @login_check_decorator
@@ -275,7 +280,7 @@ if __name__ == '__main__':
     server.register(r"/account/login", login_handler, post=login_authentication)
     server.register(r"/location/search", search_handler)
     server.register(r"/location/(\d+)", location_handler, post=rating)
-    server.register(r'/comment', comment_handler, post=comment)
+    server.register(r'/location/(\d+)/comment', comment_handler, post=comment)
     server.register(r"/location/create", create_handler, post=location_creator)
     server.register(r"/location/edit/(\d+)", edit_handler, post=location_editor)
     server.register(r"/account/profile/([a-z0-9A-Z._]+)", profile_handler)

@@ -57,6 +57,34 @@
         <a id="edit" href="edit/{{ location.id }}">Edit</a>
     {% end if %}
 
+    <div id="comments">
+        {% if comments %}
+        <h3>Comments</h3>
+        {% for comment in comments %}
+            <section class="comment">
+                <p>{{ comment.get_author_comment(comment.author) }}</p>
+                <p>{{ comment.comment }}</p>
+            </section>
+        {% end for %}
+        {% else %}
+        <p>Leave the first comment!</p>
+        {% end if %}
+        {% if logged_in %}
+        <form action="/location/{{ location.id }}/comment" enctype="multipart/form-data" method="post">
+            <fieldset>
+               <legend><span class="fa fa-plus-circle"></span>&nbsp;Add Comment</legend>
+                <p>
+                    <label>Add Comment:</label>
+                    <textarea cols="55" rows="7" placeholder="Comment" name="comment" maxlength="200" required></textarea>
+                </p>
+                <input type="submit" value="Add Comment">
+            </fieldset>
+        </form>
+        {% else %}
+        <a href="/account/login">Please log in to comment</a>
+        {% end if %}
+    </div>
+
 </main>
 
 {% include partials/footer.html %}
