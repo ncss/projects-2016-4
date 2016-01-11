@@ -1,4 +1,5 @@
 import sqlite3
+from math import sqrt
 
 conn = sqlite3.connect('db/database.db')
 
@@ -217,8 +218,8 @@ class Location:
     def search_name(name):
         cur = conn.execute('''
             SELECT name, description, picture, uploader, address, longitude, latitude, id FROM locations
-            WHERE name LIKE  '%' || ? || '%'
-            ''', (name,))
+            WHERE (address LIKE '%' || ? || '%' OR name LIKE '%' || ? || '%')
+            ''', (name, name))
         res = []
         for i in cur.fetchall():
             res.append(Location(*i))
@@ -282,6 +283,10 @@ class Location:
         res = cur.fetchone()
         if res:
             return res[0]
+
+    def distance_from(self, latitude, longitude):
+        return sqrt((latitude-self.latitude)**2+(longitude-self.longitude)**2) * 95.59
+
 
 class Tag:
     def __init__(self, name, place):
