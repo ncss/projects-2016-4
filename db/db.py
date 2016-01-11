@@ -10,21 +10,37 @@ def run_sql(sql):
 
 
 class User:
-    def __init__(self, username, password, email, id=None):
+    def __init__(self, username, password, dp, email, fname, lname, id=None):
         self.username = username
         self.password = password
+        self.dp = dp
         self.email = email
+        self.fname = fname
+        self.lname = lname
         self.id = id
+
 
     @staticmethod
     def find(username):
         cur = conn.execute('''
-            SELECT username, password, email, id
+            SELECT username, password, dp, email, fname, lname, id
             FROM users
             WHERE username = ?''', (username,))
         res = cur.fetchone()
         if res:
             return User(*res)
+
+    @staticmethod
+    def get_email(email):
+        cur = conn.execute('''
+          SELECT email
+          FROM users
+          WHERE email = ?
+        ''', (email,))
+        res = cur.fetchone()
+        if res:
+            return email
+        return('no')
 
     @staticmethod
     def findall():
@@ -79,6 +95,25 @@ class User:
         conn.execute('DELETE FROM users WHERE username = ?', (username,))
         conn.commit()
 
+    @staticmethod
+    def all_locations():
+        pass
+
+    @staticmethod
+    def search_tag(tag_name):
+        cur = conn.execute('''
+          SELECT l.name, description, picture, uploader, address, longitude, latitude, l.id FROM locations l
+          JOIN  tags t ON l.id = t.place
+          WHERE t.name = ?
+          ''', (tag_name,))
+        return [Location(*row) for row in cur.fetchall()]
+
+    def get_tags(self):
+        return Tag.find_from_place(self.id)
+
+    def add_tag(self, name):
+        return Tag.create_tag(name, self.id)
+
 
 class Location:
     def __init__(self, name, description, picture, uploader, address, longitude, latitude, id=None):
@@ -102,6 +137,7 @@ class Location:
         ''', (name, description, picture, uploader, address, latitude, longitude))
         conn.commit()
         return Location(name, description, picture, uploader, address, latitude, longitude)
+
 
     def change_location(self, address, longitude, latitude):
         conn.execute('''

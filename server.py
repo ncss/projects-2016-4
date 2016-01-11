@@ -63,7 +63,12 @@ def location_handler(response, id):
         context['location'] = location
         render_page('location.html', response, context)
     else:
-        response.set_status(404)
+        error_handler(response)
+
+def error_handler(response):
+    response.set_status(404)
+    #add in error page
+    render_page('generic-template.html', response, {})
 
 @login_check_decorator
 def create_handler(response):
@@ -109,6 +114,10 @@ def signup_authentication(response):
         context["error"] = "Passwords do not match"
     elif not re.match(r"^[0-9a-zA-Z_\.]+$", username):
         context["error"] = "Invalid username, please use only letters, numbers, underscores and periods"
+    elif User.get_email(email) == email:
+        context['error'] = "Email already taken"
+    elif len(password) < 8:
+        context["error"] = "Password must be at least 8 characters"
     else:
         User.create(username, password, None, email, fname, lname)
         response.set_secure_cookie('username', username)
@@ -163,4 +172,5 @@ if __name__ == '__main__':
     server.register("/account/profile/([a-z0-9A-Z._]+)", user_handler)
     server.register("/account/profile", profile_handler)
     server.register("/account/logout", logout_handler)
+    server.register("/.*", error_handler)
     server.run()
