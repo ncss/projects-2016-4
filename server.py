@@ -1,6 +1,6 @@
 from template.render import render
 from tornado.ncss import Server
-from db.db import User
+from db.db import User, Location
 import re
 
 def get_login(response):
@@ -16,7 +16,9 @@ def login_check_decorator(fn):
 
 def render_page(filename, response, context):
     context['logged_in'] = get_login(response)
-
+    if context['logged_in']:
+        user = User.find(context['logged_in'])
+        context['user'] = user
     html = render(filename, context )
     response.write(html)
 
@@ -42,8 +44,7 @@ def search_handler(response):
     response.write("Search")
 
 def location_handler(response, id):
-    logged_in = get_login(response)
-    response.write("Location {}".format(id))
+    pass
 
 @login_check_decorator
 def create_handler(response):
