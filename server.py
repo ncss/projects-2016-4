@@ -24,6 +24,8 @@ def render_page(filename, response, context):
     if context['logged_in']:
         user = User.find(context['logged_in'])
         context['user'] = user
+    if 'query' not in context:
+        context['query'] = None
     html = render(filename, context )
     response.write(html)
 
@@ -54,7 +56,11 @@ def search_handler(response):
     context = {}
     results = []
     entry = response.get_field('search')
+    entry = entry.strip()
     context['query'] = entry
+    if entry == '':
+        response.redirect('/')
+        return
     search_results = Location.search_name(entry)
     context['results'] = search_results
     render_page('searchresult.html', response, context)
