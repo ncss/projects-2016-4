@@ -371,7 +371,7 @@ class Comment:
     @staticmethod
     def find_author(author):
         res = []
-        cur = conn.execute('SELECT * FROM comments WHERE author=?', (author,))
+        cur = conn.execute('SELECT author, comment, place, id FROM comments WHERE author=?', (author,))
         for row in cur.fetchall():
             res.append(Comment(*row))
         return res
@@ -379,7 +379,7 @@ class Comment:
     @staticmethod
     def find_place(place):
         res = []
-        cur = conn.execute('SELECT * FROM comments WHERE place=?', (place,))
+        cur = conn.execute('SELECT author, comment, place, id FROM comments WHERE place=?', (place,))
         for row in cur.fetchall():
             res.append(Comment(*row))
         return res
