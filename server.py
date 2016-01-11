@@ -79,7 +79,7 @@ def search_handler(response):
 
 def location_handler(response, id):
     location = Location.find_id(id)
-    stars = Location.get_user_rating(location)
+    stars = Location.get_user_rating(, location)
     context = {'user_rating': stars}
     if location:
         context['location'] = location
