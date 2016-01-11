@@ -1,6 +1,6 @@
 from template.render import render
 from tornado.ncss import Server
-from db.db import User, Location, Rating
+from db.db import User, Location, Rating, Tag
 import hashlib
 import re
 
@@ -178,8 +178,14 @@ def location_creator(response):
         context['error'] = 'Place already exists'
         render_page('create_location.html', response, context)
     else:
-        Location.create(name, description, filename_hash, user.id, address, lat, long)
+        loc = Location.create(name, description, filename_hash, user.id, address, lat, long)
         response.redirect("/location/{}".format(Location.find_name(name).id))
+
+        tags = response.get_field('tags').split(',')
+        if tags == ['']:
+            tags = []
+        for tag in tags:
+            Tag.create_tag(tag, loc.id)
     return
 
 

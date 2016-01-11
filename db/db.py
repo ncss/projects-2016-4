@@ -126,7 +126,7 @@ class Location:
         self.id = id
 
     def __repr__(self):
-        return "Location(%s)" % self.name
+        return "Location({})".format(self.name)
 
     @staticmethod
     def create(name, description, picture, uploader, address, latitude, longitude):
@@ -135,7 +135,8 @@ class Location:
             VALUES(?, ?, ?, ?, ?, ?, ?);
         ''', (name, description, picture, uploader, address, latitude, longitude))
         conn.commit()
-        return Location(name, description, picture, uploader, address, latitude, longitude)
+        id = conn.execute('SELECT COUNT(id) FROM tags').fetchone()[0]
+        return Location(name, description, picture, uploader, address, latitude, longitude, id)
 
     @staticmethod
     def find_user_locations(user_id):
@@ -173,6 +174,7 @@ class Location:
         if res:
             location = Location(*res)
             return location
+
     @staticmethod
     def findall():
         cur = conn.execute('SELECT name, description, picture, uploader, address, longitude, latitude FROM locations')
@@ -219,13 +221,14 @@ class Location:
     def add_tag(self, name):
         return Tag.create_tag(name, self.id)
 
+
 class Tag:
     def __init__(self, name, place):
         self.name = name
         self.place = place
 
     def __repr__(self):
-        return 'Tag("%s")' % self.name
+        return 'Tag("{}")'.format(self.name)
 
     @staticmethod
     def create_tag(name, place):
@@ -266,10 +269,8 @@ class Tag:
           ''', (place, name))
         conn.commit()
 
-
     def delete(self):
         return Tag.delete_tag(self.name, self.place)
-
 
 
 class Rating:
