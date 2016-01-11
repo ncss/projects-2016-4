@@ -75,7 +75,7 @@ class User:
     def create(username, password, dp, email, fname, lname):
         cur = conn.execute('''SELECT username, password, dp, email, fname, lname FROM users WHERE username = ? OR email = ?''', (username, email))
         res = cur.fetchone()
-        
+
         if res is None:
             conn.execute('''INSERT INTO users(username, password, dp, email, fname, lname)
             VALUES(?, ?, ?, ?, ?, ?)''',
@@ -218,6 +218,14 @@ class Location:
           JOIN  tags t ON l.id = t.place
           WHERE t.name = ?
           ''', (tag_name,))
+        return [Location(*row) for row in cur.fetchall()]
+
+    @staticmethod
+    def search_address(address):
+        cur = conn.execute('''
+          SELECT name, description, picture, uploader, address, longitude, latitude, id FROM locations
+          WHERE address = ?
+          ''', (address,))
         return [Location(*row) for row in cur.fetchall()]
 
     def get_tags(self):
