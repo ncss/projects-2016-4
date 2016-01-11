@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>Edit a location</title>
+    {% include partials/head_meta.html %}
+    <link href="/static/css/create_location.css" rel="stylesheet">
+</head>
+<body>
+
+{% include partials/header.html %}
+
+<main>
+    <form enctype="multipart/form-data" class="location-form" method="post">
+        <fieldset>
+            <legend>Edit A Location</legend>
+            {% if error %}
+                <p class="error">
+                    {{ error }}
+                </p>
+            {% end if %}
+            <p class="error error-hidden"></p>
+            <p>
+                <label>Name:</label>
+                <input type="text" placeholder="Name" name="name" required value="{{location.name}}">
+
+            </p>
+            <p>
+                <label>Description:</label>
+                <textarea cols="55" rows="7" placeholder="Description" name="description" required>{{ location.description }}</textarea>            </p>
+            <p>
+                <label>Picture:</label>
+                <input type="file" placeholder="Picture" name="picture" accept = "image/*">
+            </p>
+            <p>
+                <label>Address:</label>
+                <input type="text" placeholder="Address" name="address" required value="{{ location.address }}">
+            </p>
+
+          <input type="hidden" name="lat" required>
+          <input type="hidden" name="long" required>
+          <input type="submit" value="Update Location">
+      </fieldset>
+    </form>
+</main>
+
+{% include partials/footer.html %}
+
+
+<script>
+    var form = document.querySelector('.location-form');
+
+    form.onsubmit = function () {
+        var address = document.querySelector('input[name=address]').value;
+        address = encodeURIComponent(address.toLowerCase()).replace(/%20/g, '+');
+        var base = 'http://nominatim.openstreetmap.org/search/?format=json&q=';
+
+        var request = new XMLHttpRequest();
+        request.open('GET', base + address, true);
+
+        request.onload = function() {
+            if (request.status >= 200 && request.status < 400) {
+                var data = JSON.parse(request.responseText);
+                if (data.length > 0) {
+                    document.querySelector('input[name=lat]').value = data[0].lat;
+                    document.querySelector('input[name=long]').value = data[0].lon;
+                    console.log(data[0].lat);
+                    console.log(data[0].lon);
+                    form.submit();
+                } else {
+                    var error = document.querySelector('.error');
+                    error.classList.remove('error-hidden');
+                    error.textContent = 'Address not found.';
+                }
+            }
+        };
+
+        request.send();
+        return false;
+    };
+</script>
+
+</body>
+</html>
