@@ -1,6 +1,7 @@
 from template.render import render
 from tornado.ncss import Server
 from db.db import User, Location
+import hashlib
 import re
 
 def get_login(response):
@@ -27,29 +28,46 @@ def index_handler(response):
 
 def signup_handler(response):
     logged_in = get_login(response)
+    context = {'error':None}
     if logged_in is not None:
         response.redirect('/')
     else:
-        render_page('register.html', response, {})
+        render_page('signup.html', response, context)
+
 
 def login_handler(response):
     logged_in = get_login(response)
+    context = {'login_error': None}
     if logged_in is not None:
         response.redirect("/account/profile")
     else:
-        render_page('login.html', response, {})
+        render_page('login.html', response, context)
 
 def search_handler(response):
     logged_in = get_login(response)
-    response.write("Search")
+    context = {}
+    context['query'] = "Test Search"
+    results = []
+    results.append(Location("Bob's Farm", "Suspendisse potenti. In hac habitasse platea dictumst. Nullam sed maximus lorem, nec bibendum metus. Suspendisse consectetur arcu sed lacus euismod, quis maximus tortor semper. Nam eu posuere odio. Duis rhoncus urna ligula, vel hendrerit mi pellentesque non. Integer sed mauris dui. Curabitur auctor lacinia neque ut vestibulum. Donec ipsum ante, euismod vel auctor non, finibus quis odio. Vivamus venenatis aliquet arcu sit amet posuere. Ut tincidunt ante ut felis feugiat, et mollis odio efficitur.", "taj_mahal.jpg", "MaryAnn", "180 Road Way", 120, 160))
+    results.append(Location("aaaa", "A farm owned by Bob.", "taj_mahal.jpg", "MaryAnn2", "180 Road Way...", 120, 160))
+    results.append(Location("Bob's zzz", "A farm q by Bob.", "taj_mahal.jpg", "MaryAnn33", "180 Road Way???????", 120, 160))
+    context['results'] = results
+    render_page('searchresult.html', response, context)
 
 def location_handler(response, id):
-    pass
+    location = Location.find_id(id)
+    context = {}
+    if location:
+        context['location'] = location
+        render_page('location.html', response, context)
+    else:
+        response.set_status(404)
 
 @login_check_decorator
 def create_handler(response):
     logged_in = get_login(response)
-    response.write("Create Location")
+    render_page('create_location.html', response, {})
+
 
 @login_check_decorator
 def user_handler(response, username):
@@ -65,12 +83,12 @@ def login_authentication(response):
     username = response.get_field('username')
     password = response.get_field('password')
     user = User.find(username)
-    context={'login error': None}
+    context = {'login_error': None}
     if user and username == user.username and password == user.password:
         response.set_secure_cookie('username', username)
         response.redirect("/")
     else:
-        context['login error'] = 'Incorrect username or password'
+        context['login_error'] = 'Incorrect username or password'
         render_page("login.html", response, context)
 
 def signup_authentication(response):
@@ -95,7 +113,8 @@ def signup_authentication(response):
         response.set_secure_cookie('username', username)
         response.redirect("/")
         return None
-    render_page('register.html', response, context)
+    render_page('signup.html', response, context)
+
 
 def logout_handler(response):
     response.clear_cookie("username")
@@ -103,10 +122,28 @@ def logout_handler(response):
 
 @login_check_decorator
 def location_creator(response):
+    file_input = response.get_file('picture')
+    filename_hash = hashlib.sha1(file_input[2]).hexdigest()
+
+    file_output = open('./static/place-images/{}'.format(filename_hash), 'wb')
+    file_output.write(file_input[2])
+    file_output.close()
+
     name = response.get_field('name')
     description = response.get_field('description')
-    picture = response.get_field('picture')
     address = response.get_field('address')
+    username = get_login(response).decode()
+    user = User.find(username)
+
+    try:
+        lat = float(response.get_field('lat'))
+        long = float(response.get_field('long'))
+    except ValueError:
+        response.write('Invalid lat/long')
+        return
+
+    Location.create(name, description, filename_hash, user.id, address, lat, long)
+    response.write('Location successfully added')
 
 
 if __name__ == '__main__':

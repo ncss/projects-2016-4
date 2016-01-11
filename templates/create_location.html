@@ -18,9 +18,14 @@
     <form enctype="multipart/form-data" action="/location/create" class="login-form" method="post">
         <input type="text" placeholder="Name" name="name" required>
         <!-- <input type="text" placeholder="Description" name="description"> -->
-	<textarea cols="25" rows="7" placeholder=" Description" name="description" required></textarea>
+        <textarea cols="25" rows="7" placeholder="Description" name="description" required></textarea>
         <input type="file" placeholder="Picture" name="picture" accept = "image/*" required>
         <input type="text" placeholder="Address" name="address" required>
+
+        <!-- will be replaced with map -->
+        <input type="text" placeholder="Latitude" name="lat" required>
+        <input type="text" placeholder="Longitude" name="long" required>
+
         <input type="submit" value="Add Location">
     </form>
 
