@@ -70,7 +70,7 @@ def search_handler(response):
 
 def location_handler(response, id):
     location = Location.find_id(id)
-    context = {'rating': Location.avg_rating}
+    context = {}
     if location:
         context['location'] = location
         render_page('location.html', response, context)
