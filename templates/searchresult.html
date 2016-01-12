@@ -12,9 +12,18 @@
 
 <main>
     {% if len(results) == 0 %}
-    <h1>No results for {{query}}</h1>
+        {% if query %}
+            <h1>No results for {{ query }}</h1>
+        {% elif tags %}
+            <h1>No results for {{ tags }}</h1>
+        {% end if %}
     {% else %}
-    <h1>Search results for {{query}}</h1>
+        {% if query %}
+            <h1>Search results for {{ query }}</h1>
+        {% elif tags %}
+            <h1>Search results for {{ tags }}</h1>
+        {% end if %}
+
 
     <div class = "searchresults">
         {% for result in results %}
@@ -24,7 +33,7 @@
             </div>
 
             <div class="text">
-    	        <a href="/location/{{ result.id }}"><h3> {{result.name}}</h3></a>
+    	        <a href="/location/{{ result.id }}"><h3> {{result.name}}</h3></a><b>{% if user_loc %}{{ round(result.distance_from(user_loc[0], user_loc[1]), 2) }}km{% end if %}</b>
                 {{result.description}}
             </div>
         </div>

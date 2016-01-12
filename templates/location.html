@@ -23,8 +23,8 @@
             <h2>{{ location.name }}</h2>
             <div id="star">
                 {% for i in range(5,0,-1) %}
-                    {% if logged_in and 1 is not None %}
-                        {% if i <= round(1) %}
+                    {% if logged_in and user_rating is not None %}
+                        {% if i <= round(user_rating) %}
                             <div id="star{{i}}" class="goldstar" {% if logged_in %} onclick="changeRate( {{ i }} , {{ location.id }} )" {% end if %}><i class="fa fa-star"></i></div>
                         {% else %}
                             <div id="star{{i}}" class="blackstar" {% if logged_in %} onclick="changeRate( {{ i }} , {{ location.id }} )" {% end if %}><i class="fa fa-star"></i></div>
@@ -37,14 +37,11 @@
                         <div id="star{{i}}" class="blackstar" {% if logged_in %} onclick="changeRate( {{ i }} , {{ location.id }} )" {% end if %}><i class="fa fa-star"></i></div>
                     {% end if %}
                 {% end for %}
-                {% if logged_in and location.uploader == user.id %}
-                    <a id="edit" href="edit/{{ location.id }}">Edit</a>
-                {% end if %}
             </div>
             {% if not logged_in %}
             <br />
             <br />
-                <p id="lograte">Log in to rate</p>
+                <p id="lograte"><a href="/account/login">Log in to rate</a></p>
             {% end if %}
             <div id="clear"></div>
             <p>{{ location.address }}</p>
@@ -56,6 +53,43 @@
         <h3>Description</h3>
         <p>{{ location.description }} </p>
     </div>
+    {% if logged_in and location.uploader == user.id %}
+        <a id="edit" href="edit/{{ location.id }}">Edit</a>
+    {% end if %}
+
+    <div id="tags">
+        <h4>Tags</h4>
+
+        <p>{{ ', '.join(tag.name[0] for tag in loc_tags) }}</p>
+
+    </div>
+    <div id="comments">
+        {% if comments %}
+        <h3>Comments</h3>
+        {% for comment in comments %}
+            <section class="comment">
+                <h4>{{ comment.get_author_comment(comment.author) }}</h4>
+                <p>{{ comment.comment }}</p>
+            </section>
+        {% end for %}
+        {% else %}
+        <p>Leave the first comment!</p>
+        {% end if %}
+        {% if logged_in %}
+        <form action="/location/{{ location.id }}/comment" enctype="multipart/form-data" method="post">
+            <fieldset>
+               <legend><span class="fa fa-plus-circle"></span>&nbsp;Add Comment</legend>
+                <p>
+                    <label>Add Comment:</label>
+                    <textarea cols="55" rows="7" placeholder="Comment" name="comment" maxlength="200" required></textarea>
+                </p>
+                <input type="submit" value="Add Comment">
+            </fieldset>
+        </form>
+        {% else %}
+        <a href="/account/login">Please log in to comment</a>
+        {% end if %}
+    </div>
 
 </main>
 
@@ -65,9 +99,9 @@
 <script>
         var map = L.map('map').setView([{{ location.latitude }}, {{ location.longitude }}], 13);
 
-        L.tileLayer('http://korona.geog.uni-heidelberg.de/tiles/roads/x={x}&y={y}&z={z}', {
-            attribution: '&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
-        }).addTo(map);
+        L.tileLayer('http://{s}.tile.openstreetmap.se/hydda/full/{z}/{x}/{y}.png', {
+	attribution: 'Tiles courtesy of <a href="http://openstreetmap.se/" target="_blank">OpenStreetMap Sweden</a> &mdash; Map data &copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>'
+}).addTo(map);
 
         L.marker([{{ location.latitude }}, {{ location.longitude }}]).addTo(map)
             .bindPopup('{{ location.name }}')
