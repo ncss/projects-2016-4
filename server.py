@@ -156,7 +156,7 @@ def profile_handler(response, username=None):
     context = {}
     user_locations = Location.find_user_locations(user_object.id)
     context['results'] = user_locations
-    context['user'] = user_object
+    context['user_object'] = user_object
     render_page('account.html', response, context)
 
 

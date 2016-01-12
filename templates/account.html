@@ -16,10 +16,10 @@
         <main class="login-form">
 
             <fieldset>
-                <legend><span class="fa fa-user"></span>&nbsp;{{ user.full_name }}</legend>
+                <legend><span class="fa fa-user"></span>&nbsp;{{ user_object.full_name }}</legend>
                 <div class="user-details">
-                    <h3>{{ user.username }}</h3>
-                    <p>email: {{ user.email }}</p>
+                    <h3>{{ user_object.username }}</h3>
+                    <p>email: {{ user_object.email }}</p>
                 </div>
             </fieldset>
 
@@ -31,7 +31,7 @@
                             <div class="img">
                                 <a href="/location/{{ result.id }}"><img src = "/static/place-images/{{result.picture}}"></a>
                             </div>
-                            <div>
+                            <div class="text">
                                 <a href="/location/{{ result.id }}"><h3> {{result.name}}</h3></a>
                                 {{result.description}}
                             </div>
