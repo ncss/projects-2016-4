@@ -42,7 +42,7 @@ def index_handler(response):
 def rating(response, location_id):
     if get_login(response):
         user_object = User.find(get_login(response))
-        Rating.create(location_id, response.get_field('stars'), user_object.id)
+        Rating(location_id, response.get_field('stars'), user_object.id).create()
 
 
 def signup_handler(response):
@@ -135,7 +135,7 @@ def edit_handler(response, location_id):
 def comment_post(response, location_id):
     user_object = User.find(get_login(response))
     comment = response.get_field('comment')
-    Comment.create(user_object.id, comment, location_id)
+    Comment(user_object.id, comment, location_id).create()
     response.redirect('/location/' + location_id)
 
 
