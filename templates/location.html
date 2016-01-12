@@ -68,7 +68,7 @@
         <h3>Comments</h3>
         {% for comment in comments %}
             <section class="comment">
-                <p>{{ comment.get_author_comment(comment.author) }}</p>
+                <h4>{{ comment.get_author_comment(comment.author) }}</h4>
                 <p>{{ comment.comment }}</p>
             </section>
         {% end for %}
