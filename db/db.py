@@ -227,11 +227,14 @@ class Location:
         res = cur.fetchall()
 
         total = 0
+        num_of_ratings = 0
         for i in res:
-            total += i[0]
+            if type(i) is int:
+                total += i[0]
+                num_of_ratings += 1
 
         if total != 0:
-            average = total/len(res)
+            average = total/num_of_ratings
             return average
 
     def get_user_rating(self, user):
@@ -239,7 +242,10 @@ class Location:
 
         res = cur.fetchone()
         if res:
-            return res[0]
+            try:
+                return str(int(res[0]))
+            except ValueError:
+                return
 
     def distance_from(self, latitude, longitude):
         return sqrt((latitude-self.latitude)**2+(longitude-self.longitude)**2) * 95.59
