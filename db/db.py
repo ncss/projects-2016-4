@@ -132,7 +132,7 @@ class Location:
         conn.commit()
         id = conn.execute('SELECT MAX(id) FROM locations').fetchone()[0]
         return Location(self.name, self.description, self.picture, self.uploader, self.address,
-                        self.latitude, self.longitude, self.id)
+                        self.longitude, self.latitude, self.id)
 
     @staticmethod
     def find_user_locations(user_id):
