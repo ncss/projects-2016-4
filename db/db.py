@@ -229,7 +229,7 @@ class Location:
         total = 0
         num_of_ratings = 0
         for i in res:
-            if type(i) is int:
+            if type(i[0]) is int:
                 total += i[0]
                 num_of_ratings += 1
 
@@ -243,7 +243,7 @@ class Location:
         res = cur.fetchone()
         if res:
             try:
-                return str(int(res[0]))
+                return int(res[0])
             except ValueError:
                 return
 
